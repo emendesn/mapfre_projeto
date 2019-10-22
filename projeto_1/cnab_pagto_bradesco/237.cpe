@@ -1,0 +1,75 @@
+ID REGISTRO    0010010"0"                                                         
+NUM CONTRATO   0020090PADL(ALLTRIM(SEE->EE_CODEMP),8,"0")                         
+TIPO INSCR EMP 0100100IIF(SM0->M0_TPINSC==3,1,2)                                  
+NUM INSCR EMP  0110250PADL(ALLTRIM(SM0->M0_CGC),15,"0")                           
+NOME EMPRESA   0260650PADR(SM0->M0_NOMECOM,40," ")                                
+TIPO SERVICO   0660670"20"                                                        
+COD ORIGEM     0680680"1"                                                         
+NUM REMESSA    0690730SUBSTR(ALLTRIM(SEE->EE_ULTDSK),2,5)                         
+NUM RETORNO    0740780"00000"                                                     
+DATA GERACAO   0790860GRAVADATA(DDATABASE,.F.,8)                                  
+HORA GERACAO   0870920STRTRAN(TIME(),":")                                         
+DENSIDADE      0930970SPACE(5)                                                    
+UNIDADE        0981000SPACE(3)                                                    
+ID MODULO      1011050SPACE(5)                                                    
+TIPO PROCESSA  1061060"0"                                                         
+RESERVADO EMP  1071800SPACE(74)                                                   
+RESERVADO BCO  1812600SPACE(80)                                                   
+RESERVADO BCO  2614940SPACE(234)                                                  
+SEQUENCIAL     4955000"000001"                                                    
+ID REGISTRO    0010010"1"                                                         
+FAV TIPO INSCR 0020020IIF(SA2->A2_TIPO=="F",1,IIF(SA2->A2_TIPO=="J",2,3))         
+FAV NUM INSCR  0030170EXECBLOCK("CNPJCPF",.F.,.F.)                                
+FAV NOME       0180470SUBSTR(SA2->A2_NOME,1,30)                                   
+FAV ENDERECO   0480870PADR(SA2->A2_END,40," ")                                    
+FAV CEP        0880950PADR(SA2->A2_CEP,8,"0")                                     
+FAV BANCO      0960980PADL(ALLTRIM(SE2->E2_BANCO),3,"0")                          
+FAV AGENCIA    0991030PADL(STRTRAN(ALLTRIM(SE2->E2_AGENCIA),"-"),5,"0")           
+FAV DV AGENCIA 1041040U_MPFA001(RIGHT(PADL(ALLTRIM(SE2->E2_AGENCIA),5,"0"),4),5)  
+FAV CONTA      1051180PADL(STRTRAN(ALLTRIM(SE2->E2_NUMCON),"-"),14,"0")           
+FAV DV AG/CONTA1191190SPACE(1)                                                    
+NUM PAGAMENTO  1201350SE2->(E2_PREFIXO+E2_NUM+E2_PARCELA+E2_FORNECE)              
+CARTEIRA       1361380PADL(ALLTRIM(SUBSTR(SE2->E2_CODBAR,43,2)),3,"0")            
+NOSSO NUMERO   1391500PADL(ALLTRIM(SUBSTR(SE2->E2_CODBAR,26,11)),12,"0")          
+SEU NUMERO     1511650PADL(ALLTRIM(SE2->E2_IDCNAB),15,"0")                        
+DATA VENCIMENTO1661730DTOS(SE2->E2_VENCREA)                                       
+DATA EMISSAO   1741810"00000000"                                                  
+DATA LIMITE    1821890"00000000"                                                  
+RESERVADO      1901900"0"                                                         
+FATOR VENCTO   1911940PADL(ALLTRIM(SUBSTR(SE2->E2_CODBAR,6,4)),4,"0")             
+VLR TITULO     1952042"000000000000000"                                           
+VLR CREDITO    2052192STRZERO(INT(ROUND(SE2->E2_VLCRUZ*100,2)),15)                
+VLR DESCONTO   2202342REPLICATE("0",15)                                           
+VLR ACRESCIMO  2352492REPLICATE("0",15)                                           
+TIPO DOCUMENTO 2502510"05"                                                        
+NUM DOCUMENTO  2522610SE2->E2_IDCNAB                                              
+SERIE DOCUMENTO2622630SPACE(2)                                                    
+MODELO PAGTO   2642650IIF(SEA->EA_MODELO$"41","07",SEA->EA_MODELO)                
+DATA CREDITO   2662730"00000000"                                                  
+MOEDA          2742760SPACE(3)                                                    
+SITUACAO AGENDA2772780SPACE(2)                                                    
+INFORMACAO RET 2792880SPACE(10)                                                   
+TIPO MOVIMENTO 2892890"0"                                                         
+COD MOVIMENTO  2902910"00"                                                        
+HORA CONSULTA  2922950SPACE(4)                                                    
+SLD DISPONIVEL 2963100SPACE(15)                                                   
+VLR TAXA PRE   3113250SPACE(15)                                                   
+RESERVADO      3263310SPACE(6)                                                    
+SACADOR        3323710SPACE(40)                                                   
+RESERVADO      3723720SPACE(1)                                                    
+NIVEL INFOR RET3733730SPACE(1)                                                    
+INF COMPLEMENTO3744130EXECBLOCK("CNABINFO")                                       
+COD AREA EMP   4144150"00"                                                        
+USO EMPRESA    4164500SE2->E2_NUM                                                 
+RESERVADO      4514720SPACE(22)                                                   
+COD LANCAMENTO 4734770SPACE(5)                                                    
+RESERVADO      4784780SPACE(1)                                                    
+TIPO CTA FORNEC4794790"1"                                                         
+CTA COMPLEMENTO4804860IIF(SM0->M0_CODIGO$"03",'0110440','0000000')                
+RESERVADO      4874940SPACE(8)                                                    
+SEQUENCIAL     4955000INCREMENTA()                                                
+ID REGISTRO    0010010"9"                                                         
+QTDE REGISTRO  0020070INCREMENTA()                                                
+TOTAL PAGAMENTO0080240STRZERO(SOMAVALOR(),17)                                     
+RESERVADO      0254940SPACE(470)                                                  
+SEQUENCIAL     4955000INCREMENTA()                                                

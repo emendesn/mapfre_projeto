@@ -1,0 +1,52 @@
+Group Novo Grupo de Projetos
+   Version=7.0
+   VSSDB=
+   HasProperties=1
+   Properties
+      BeforeApply=
+      AfterApply=
+      Icon=
+      ID=
+      Version=
+      PalmName=
+      OutPut=
+   End
+   ProjectsCount=1
+   Project Novo Projeto
+      FoldersCount=2
+      Folder Fontes
+         VSSPath=Fontes
+         FilesCount=4
+         File \Totvs\Protheus11\my projects\NOVOS\DIRFA.PRW
+             Type=T
+         End
+         File \Totvs\Protheus11\my projects\NOVOS\RAZAOEXC.PRW
+             Type=T
+         End
+         File \Totvs\Protheus11\my projects\NOVOS\RELTRIE.PRW
+             Type=T
+         End
+         File \Totvs\Protheus11\my projects\NOVOS\CTBR265C.PRW
+             Type=T
+         End
+      End
+      Folder Definições
+         VSSPath=Definições
+         FilesCount=0
+      End
+   End
+   BatchBuild_Item0=Faturamento · Producao
+   BatchBuild_Item1=Faturamento · CPD
+   BatchBuild_Item2=Financeiro · Producao
+   BatchBuild_Item3=Financeiro · CPD
+   BatchBuild_Item4=Contabilidade · Producao
+   BatchBuild_Item5=Contabilidade · CPD
+   BatchBuild_Item6=Ativo Fixo · Producao
+   BatchBuild_Item7=Ativo Fixo · CPD
+   BatchBuild_Item8=Fiscal · Producao
+   BatchBuild_Item9=Fiscal · CPD
+   BatchBuild_Item10=X3/X6/X7/XB · Producao
+   BatchBuild_Item11=X3/X6/X7/XB · CPD
+   BatchBuild_Item12=Recursos Humanos · Producao
+   BatchBuild_Item13=Recursos Humanos · CPD
+End

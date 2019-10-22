@@ -1,0 +1,441 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+#IFNDEF WINDOWS
+	#DEFINE PSAY SAY
+#ENDIF	
+
+User Function Fifr010()        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("TITULO,CSTRING,WNREL,CBTXT,CDESC1,CDESC2")
+SetPrvt("TAMANHO,ARETURN,NLASTKEY,CPERG,CABEC1,CABEC2")
+SetPrvt("CRODATXT,NCNTIMPR,NTIPO,NOMEPROG,CCONDICAO,NTOTREGS")
+SetPrvt("NMULT,NPOSANT,NPOSATU,NPOSCNT,COPANT,CCAMPOCUS")
+SetPrvt("NCUSTO,NCUSTOM,NTOTQUANT,NTOTCUSTO,NTOTREQ,NTOTPROD")
+SetPrvt("NTOTDEV,NTOTQUANTMOD,NTOTCUSTOMOD,NTOTREQMOD,NTOTDEVMOD,LCONTINUA")
+SetPrvt("LI,M_PAG,CNOMARQ,CMOEDA,NEWHEAD,CCHAVEIND")
+SetPrvt("NQTDEPROD,")
+
+#IFNDEF WINDOWS
+// Movido para o inicio do arquivo pelo assistente de conversao do AP5 IDE em 21/06/01 ==> 	#DEFINE PSAY SAY
+#ENDIF	
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡…o    ³ FIFR010  ³ Autor ³ Rosane / Marcos       ³ Data ³ 02/09/97 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³Relacao Das Ordens de Producao FIFO                         ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ SIGAEST                                                    ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ ATUALIZACOES SOFRIDAS DESDE A CONSTRUCAO INICIAL.                     ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ PROGRAMADOR  ³ DATA   ³ BOPS ³  MOTIVO DA ALTERACAO                   ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Rodrigo Sart.³22/04/98³XXXXXX³Atualizacao para versao 2.06/4.06       ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+*/
+Titulo     := "RELACAO POR ORDEM DE PRODUCAO FIFO"
+cString    := "SD8"
+wnrel      := "FIFR010"
+CbTxt      := ""
+cDesc1     := "O objetivo deste relat¢rio ‚ exibir detalhadamente todas as movimenta-"
+cDesc2     := "‡”es feitas para cada Ordem de Produ‡„o ,mostrando inclusive os custos."
+Tamanho    := "M"
+aReturn    := { "Zebrado", 1,"Administra‡„o", 2, 2, 1, "",1 }
+nLastKey   := 0
+cPerg      := "FIR010"
+cabec1     := ""
+cabec2     := ""
+cRodaTxt   := ""
+nCntImpr   := 0
+nTipo      := 0
+nomeprog   := "FIFR010"
+cCondicao  := ""
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Verifica as perguntas selecionadas                           ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis utilizadas para parametros                         ³
+//³ mv_par01     // OP inicial                                   ³
+//³ mv_par02     // OP final                                     ³
+//³ mv_par03     // moeda selecionada ( 1 a 5 )                  ³
+//³ mv_par04     // De  Data Movimentacao                        ³
+//³ mv_par05     // Ate Data Movimentacao					           ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+pergunte(cPerg,.F.)
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Envia controle para a funcao SETPRINT                        ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+wnrel:="FIFR010"
+SetPrint(cString,wnrel,cPerg,titulo,cDesc1,cDesc2,"",.F.,"")
+
+If nLastKey == 27
+   Return .T.
+Endif
+
+SetDefault(aReturn,cString)
+
+If nLastKey == 27
+   Return .T.
+Endif
+
+#IFDEF WINDOWS
+	RptStatus({|| R010Imp()},Titulo)// Substituido pelo assistente de conversao do AP5 IDE em 21/06/01 ==> 	RptStatus({|| Execute(R010Imp)},Titulo)
+	Return
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡…o    ³ R010IMP  ³ Autor ³                       ³ Data ³ 27.11.96 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³ Chamada do Relatorio                                       ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ FIFR010                                                    ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß*/
+// Substituido pelo assistente de conversao do AP5 IDE em 21/06/01 ==> Function R010Imp
+Static Function R010Imp()
+#ENDIF
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Define Variaveis                                             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis para controle do cursor de progressao do relatorio ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+nTotRegs := 0 
+nMult    := 1
+nPosAnt  := 4
+nPosAtu  := 4
+nPosCnt  := 0
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis locais exclusivas deste programa                   ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cOpAnt      := "" 
+cCampoCus   := ""
+nCusto      := 0
+nCustom     := 0
+nTotQuant   := 0
+nTotCusto   := 0
+nTotReq     := 0
+nTotProd    := 0
+nTotDev     := 0
+nTotQuantMod:= 0
+nTotCustoMod:= 0
+nTotReqMod  := 0
+nTotDevMod  := 0
+lContinua   := .T. 
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis tipo Private padrao de todos os relatorios         ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Contadores de linha e pagina                                 ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Li    := 80
+m_pag := 1
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis locais exclusivas deste programa                   ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cNomArq := ""
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Verifica se deve comprimir ou nao                            ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+nTipo := IIF(aReturn[4]==1,15,18)
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Adiciona informacoes ao titulo do relatorio                ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cMoeda := GETMV("MV_SIMB"+Str(mv_par03,1))
+If Type("NewHead")#"U"
+	NewHead := NewHead + " - "+cMoeda
+Else
+	Titulo  := Titulo  + " - "+cMoeda
+EndIf
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Monta os Cabecalhos                                          ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cabec1 := "CENTRO    ORDEM DE    MOV CODIGO DO       DESCRICAO                   QUANTIDADE UM          CUSTO        C U S T O  NUMERO  DATA DE"
+cabec2 := "CUSTO     PRODUCAO        PRODUTO                                                         UNITARIO        T O T A L   DOCTO  EMISSAO"
+*****      123456789 12345612121 123 123456789012345 1234567890123456789012345 9,999,999.99 12 999,999,999.99 9,999,999,999.99  123456 12/12/12
+*****      0         1         2         3         4         5         6         7         8         9        10        11        12        13
+*****      0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Define o campo a ser impresso no valor de acordo com a moeda selecionada ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Do Case
+	Case mv_par03 == 1
+		cCampoCus :=   "SD8->D8_CUSTO1"
+	Case mv_par03 == 2
+		cCampoCus :=   "SD8->D8_CUSTO2"
+	Case mv_par03 == 3
+		cCampoCus :=   "SD8->D8_CUSTO3"
+	Case mv_par03 == 4
+		cCampoCus :=   "SD8->D8_CUSTO4"
+	Case mv_par03 == 5
+		cCampoCus :=   "SD8->D8_CUSTO5"
+EndCase
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Pega o nome do arquivo de indice de trabalho             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cNomArq := CriaTrab("",.F.)
+
+dbSelectArea("SD8")
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Cria o indice de trabalho                                ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+// TOP
+cCondicao := 'D8_FILIAL == "'+xFilial("SD8")+'" .And.'
+cCondicao := cCondicao + 'D8_OP >= "'   + mv_par01 + '" .And.'
+cCondicao := cCondicao + 'D8_OP <= "'   + mv_par02 + '"'
+
+cChaveInd := "D8_FILIAL+D8_OP+D8_CF+D8_SEQ+D8_PRODUTO"
+
+IndRegua("SD8",cNomArq,cChaveInd,,cCondicao,"Selecionando Registros...")
+dbSetIndex(cNomArq+OrdBagExt())
+
+dbGoTop()
+
+nTotReq    := 0
+nTotProd   := 0
+nTotDev    := 0
+nTotReqMod := 0
+nTotDevMod := 0
+
+SetRegua(LastRec())
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Correr SD8 para ler as REs, DEs e Producoes.             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+While lContinua .And. !Eof() .And. D8_FILIAL+D8_OP <= xFilial()+mv_par02
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Verifica se houve interrup‡„o pelo operador      ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	#IFDEF WINDOWS
+		If lAbortPrint
+	#ELSE
+		Inkey()
+		If LastKey() == 286
+	#ENDIF
+			@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"
+			Exit  
+		Endif
+
+	IncRegua()
+
+	If Dtos(SD8->D8_DATA)  < DTOS(mv_par04) .Or. Dtos(D8_DATA) > Dtos(mv_par05)
+		dbSelectArea("SD8")
+		dbSkip()
+		Loop
+	Endif
+		
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Correr SD8 para a mesma OP.                              ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	nTotQuant    := 0
+	nTotCusto    := 0
+	nQtdeProd    := 0
+	nTotQuantMod := 0
+	nTotCustoMod := 0
+	cOpAnt := xFilial()+D8_OP
+
+	While !Eof() .And. D8_FILIAL+D8_OP == cOpAnt
+
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Verifica se houve interrup‡„o pelo operador      ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		#IFDEF WINDOWS
+			If lAbortPrint
+		#ELSE
+			Inkey()
+			If LastKey() == 286
+		#ENDIF
+				@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"
+				Exit  
+			Endif
+
+		IncRegua()
+
+		If li > 58
+			Cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+		EndIf
+
+		If Empty( D8_OP )
+			dbSkip()
+			Loop
+		EndIf	
+
+		nCusto := &(cCampoCus)
+		If SubStr(SD8->D8_PRODUTO,1,3) != "MOD"
+			nTotQuant := nTotQuant + IIf( SubStr(D8_CF,1,2) == "RE", D8_QUANT, 0 )
+			nTotCusto := nTotCusto + IIf( SubStr(D8_CF,1,2) == "RE", nCusto, 0 )
+			nTotQuant := nTotQuant + IIf( SubStr(D8_CF,1,2) == "DE", ( -D8_QUANT ), 0 )
+			nTotCusto := nTotCusto + IIf( SubStr(D8_CF,1,2) == "DE", ( -nCusto ), 0 )
+		Else
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+			//³ Totaliza‡„o separada para a m„o-de-obra                  ³
+			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+			nTotQuantMod := nTotQuantMod + IIf( SubStr(D8_CF,1,2) == "RE", D8_QUANT, 0 )
+			nTotCustoMod := nTotCustoMod + IIf( SubStr(D8_CF,1,2) == "RE", nCusto, 0 )
+			nTotQuantMod := nTotQuantMod + IIf( SubStr(D8_CF,1,2) == "DE", ( -D8_QUANT ), 0 )
+			nTotCustoMod := nTotCustoMod + IIf( SubStr(D8_CF,1,2) == "DE", ( -nCusto ), 0 )
+		Endif
+
+		dbSelectArea("SD8")
+
+		nQtdeProd := nQtdeProd + IIf( SubStr(D8_CF,1,2) == "PR",  D8_QUANT , 0 )
+		nQtdeProd := nQtdeProd + IIf( SubStr(D8_CF,1,2) == "ER", -D8_QUANT , 0 )
+
+		dbSelectArea("SB1")
+		dbSeek(xFilial()+SD8->D8_PRODUTO)
+
+		dbSelectArea("SD8")
+		If SubStr(D8_CF,1,2) == "PR"
+			Li:= Li+1
+		EndIf	
+
+		@ Li,000 PSAY SB1->B1_CC
+		@ Li,010 PSAY D8_OP
+		@ Li,022 PSAY D8_CF
+		@ Li,026 PSAY D8_PRODUTO
+		@ Li,042 PSAY SubStr(SB1->B1_DESC,1,25)
+		If SubStr(D8_CF,1,2) == "DE"
+			@ Li,068 PSAY ( -D8_QUANT )	    Picture PesqPictQt("D8_QUANT",12)
+			@ Li,081 PSAY SB1->B1_UM
+			@ Li,084 PSAY ( nCusto/D8_QUANT ) Picture PesqPict("SD8","D8_CUSTO1",14)
+			@ Li,099 PSAY ( -nCusto )         Picture PesqPict("SD8","D8_CUSTO1",16)
+		Else	
+			@ Li,068 PSAY D8_QUANT 	          Picture PesqPictQt("D8_QUANT",12)
+			@ Li,081 PSAY SB1->B1_UM
+			@ Li,084 PSAY ( nCusto/D8_QUANT ) Picture PesqPict("SD8","D8_CUSTO1",14)
+			@ Li,099 PSAY nCusto              Picture PesqPict("SD8","D8_CUSTO1",16)
+		EndIf
+		@ Li,117 PSAY D8_DOC
+		@ Li,124 PSAY D8_DATA
+		Li := Li+1
+		
+		If SubStr(SD8->D8_PRODUTO,1,3) != "MOD"
+			If SubStr(D8_CF,1,2) == "RE"
+				nTotReq := nTotReq + nCusto
+			Elseif SubStr(D8_CF,1,2) == "DE"
+				nTotDev := nTotDev + nCusto
+			Endif
+		Else
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+			//³ Totaliza‡„o separada para a m„o-de-obra                  ³
+			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+			If SubStr(D8_CF,1,2) == "RE"
+				nTotReqMod := nTotReqMod + nCustom
+			Elseif SubStr(D8_CF,1,2) == "DE"
+				nTotDevMod := nTotDevMod + nCustom
+			Endif
+		Endif
+
+		If SubStr(D8_CF,1,2) == "PR"
+			nTotProd := nTotProd + nCusto
+		Endif
+		dbSkip()
+	End
+
+	If (nTotQuant+nTotQuantMod) != 0
+		Li := Li+1
+		@ Li,000 PSAY "TOTAL  " + SubStr(cOpAnt,3,11)
+		@ Li,019 PSAY "Custo STD : "
+		@ Li,033 PSAY SB1->B1_CUSTD                 Picture PesqPict("SB1","B1_CUSTD",14)
+		@ Li,047 PSAY "/"
+		@ Li,052 PSAY ( SB1->B1_CUSTD * nQtdeProd ) Picture PesqPict("SB1","B1_CUSTD",14)
+		@ Li,068 PSAY nTotQuant                     Picture PesqPictQt("D8_QUANT",12)
+		@ Li,099 PSAY nTotCusto                     Picture PesqPict("SD8","D8_CUSTO1",16)
+		Li := Li+1
+		If nTotQuantMod <> 0 .OR. nTotCustoMod <> 0
+			@ Li,000 PSAY "       MAO DE OBRA:"
+			@ Li,068 PSAY nTotQuantMod               Picture PesqPictQt("D8_QUANT",12)
+			@ Li,099 PSAY nTotCustoMod               Picture PesqPict("SD8","D8_CUSTO1",16)
+			Li := Li+1
+		Endif
+	EndIf
+
+	@ Li,000 PSAY Replicate("-",132)
+	Li := Li+2
+
+EndDo
+
+If li != 80
+	Li := Li+1
+	@ Li,000 PSAY "TOTAL REQUISICOES ---->"
+	@ Li,099 PSAY nTotReq		Picture PesqPict("SD8","D8_CUSTO1",16)
+	Li := Li+1
+	If Li > 58
+		Cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+	EndIf
+	@ Li,000 PSAY "TOTAL PRODUCAO    ---->"
+	@ Li,099 PSAY nTotProd   Picture PesqPict("SD8","D8_CUSTO1",16)
+	Li := Li+1
+	@ Li,000 PSAY "TOTAL DEVOLUCOES  ---->"
+	@ Li,099 PSAY nTotDev    Picture PesqPict("SD8","D8_CUSTO1",16)
+	Li := Li+1
+	If li > 57
+		Cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+	EndIf
+
+	If nTotReqMod <> 0
+		@ Li,000 PSAY "TOTAL REQUISICOES MAO DE OBRA ---->"
+		@ Li,099 PSAY nTotReqMod   Picture PesqPict("SD8","D8_CUSTO1",16)
+		Li := Li+1
+	EndIf
+	If nTotDevMod <> 0
+		@ Li,000 PSAY "TOTAL DEVOLUCOES  MAO DE OBRA ---->"
+		@ Li,099 PSAY nTotDevMod   Picture PesqPict("SD8","D8_CUSTO1",16)
+		Li := Li+1
+	Endif
+	Roda(nCntImpr,cRodaTxt,Tamanho)
+EndIf
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Devolve as ordens originais do arquivo                       ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+RetIndex("SD8")
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Apaga indice de trabalho                                     ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cNomArq := cNomArq + OrdBagExt()
+FErase(cNomArq)
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Devolve a condicao original do arquivo principal             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+dbSelectArea("SD8")
+RetIndex("SD8")
+Set Filter To
+dbSetOrder(1)
+
+Set device to Screen
+
+If aReturn[5] == 1
+	Set Printer To 
+	dbCommitAll()
+	OurSpool(wnrel)
+Endif
+
+MS_FLUSH()
+

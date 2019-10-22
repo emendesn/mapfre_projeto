@@ -1,0 +1,559 @@
+#IFNDEF WINDOWS
+	#DEFINE PSAY SAY
+#ENDIF	
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡…o    ³ FIFR030  ³ Autor ³ Rosane / Marcos       ³ Data ³ 10/03/93 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³Relacao dos Produtos Vendidos                               ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ SIGAEST                                                    ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ ATUALIZACOES SOFRIDAS DESDE A CONSTRUCAO INICIAL.                     ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ PROGRAMADOR  ³ DATA   ³ BOPS ³  MOTIVO DA ALTERACAO                   ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Rodrigo Sart.³22/04/98³XXXXXX³Atualizacao para versao 2.06/4.06       ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+*/
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Define Variaveis                                             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Titulo   := "RELACAO DOS PRODUTOS VENDIDOS"
+cDesc1   := "Este relatorio apresenta o valor total das vendas de cada produto,"
+cDesc2   := "calculando sua participacao dentro do total das vendas.Mostra tam-"
+cDesc3   := "bem o custo de cada venda e o custo de reposicao do produto."
+cString  := "SD2"
+nTipo    := 0
+wnrel    := "FIFR030"
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis tipo Private padrao de todos os relatorios         ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+aReturn  := { "Zebrado", 1,"Administra‡„o", 2, 2, 1, "",1 }
+nLastKey := 0
+cPerg    := "FIR030"
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Verifica as perguntas selecionadas                           ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Pergunte(cPerg,.F.)
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Envia controle para a funcao SETPRINT                        ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+wnrel:="FIFR030"
+wnrel:=SetPrint(cString,wnrel,cPerg,@titulo,cDesc1,cDesc2,cDesc3,.F.,"")
+
+If nLastKey == 27
+	Set Filter to
+	Return
+Endif
+
+SetDefault(aReturn,cString)
+
+If nLastKey == 27
+	Set Filter to
+	Return
+Endif
+
+#IFDEF WINDOWS
+	RptStatus({|| Execute(R030Imp)},Titulo)
+	Return
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡…o    ³ R030IMP  ³ Autor ³                       ³ Data ³ 27.11.96 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³ Chamada do Relatorio                                       ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ FIFR030                                                    ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß*/
+Function R030Imp
+#ENDIF
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis locais exclusivas deste programa                   ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cRodaTxt   := "REGISTRO(S)"
+nCntImpr   := 0
+nAp1       := 0
+nAp2       := 0
+nAp3       := 0
+nAp4       := 0
+nAt1       := 0
+nAt2       := 0
+nAt3       := 0
+nAt4       := 0
+nAg1       := 0
+nAg2       := 0
+nAg3       := 0
+nAg4       := 0
+cCodAnt    := ""
+cTipant    := ""
+nTotFat    := 0
+nTotLuc    := 0
+nFldSD1    := 0
+nFldSD2    := 0
+cMoeda     := ""
+lPassou    := .F.
+lDevolucao := .F.
+Tamanho    := "G"
+cEstoq     := If( (MV_PAR12 == 1),"S",If( (MV_PAR12 == 2),"N","SN" ) )
+cDupli     := If( (MV_PAR13 == 1),"S",If( (MV_PAR13 == 2),"N","SN" ) )
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Contadores de linha e pagina                                 ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+li         := 80
+m_pag      := 1
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis privadas especificas deste relatorio               ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+lContinua  := .T.
+lEnd       := .F.
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Inicializa os codigos de caracter Comprimido/Normal da impressora ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+nTipo      := IIF(aReturn[4]==1,15,18)
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Monta os Cabecalhos                                          ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cMoeda := GETMV("MV_SIMB"+Str(mv_par09,1))
+Titulo := Titulo + " - "+ cMoeda
+cabec1 := "TP  CODIGO           D E S C R I C A O               QUANTIDADE  UM           CUSTO       CUSTO POR       V A L O R     MAR     MIX     MIX        CUSTO DE   VARIA"
+cabec2 := "                                                                              TOTAL         UNIDADE        FATURADO     GEM            *MAR       REPOSICAO     CAO"
+*****      12  123456789012345  123456789012345678901234567890  123,123,12  12  123,123,123.12  123,123,123.12  123,123,123.12  +123.1   123.1  +123.1  111.123.123.12  +123.1
+*****      0         1         2         3         4         5         6         7         8         9        10        11        12        13        14        15        16  
+*****      0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis utilizadas para parametros                         ³
+//³ MV_PAR01     // Almoxarifado inicial                         ³
+//³ MV_PAR02     // Almoxarifado final                           ³
+//³ MV_PAR03     // Data de emissao inicial                      ³
+//³ MV_PAR04     // Data de emissao final                        ³
+//³ MV_PAR05     // tipo inicial                                 ³
+//³ MV_PAR06     // tipo final                                   ³
+//³ MV_PAR07     // produto inicial                              ³
+//³ MV_PAR08     // produto final                                ³
+//³ MV_PAR09     // moeda selecionada ( 1 a 5 )                  ³
+//³ MV_PAR10     // Considera Valor IPI Sim N„o                  ³
+//³ MV_PAR11     // Considera Devolucao NF Orig/NF Devl/Nao Cons.³
+//³ MV_PAR12     // Quanto a Estoque Movimenta/Nao Movta/Ambos   ³
+//³ MV_PAR13     // Quanto a Duplicata Gera/Nao Gera/Ambos       ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+If (MV_PAR11 # 3)
+	dbSelectArea("SD1")
+	cKeySD1 := "D1_FILIAL+D1_COD+D1_SERIORI+D1_NFORI+D1_ITEMORI"
+	cFilSD1 := "D1_FILIAL='"+xFilial("SD1")+"'.And.D1_TIPO='D'.And."+;
+              "D1_COD>='"+MV_PAR07+"'.And.D1_COD<='"+MV_PAR08+"'.And."+;
+              "D1_LOCAL>='"+MV_PAR01+"'.And.D1_LOCAL<='"+MV_PAR02
+	cArqSD1 := CriaTrab(NIL,.F.)
+	If (MV_PAR11 == 1)
+		cFilSD1 := cFilSD1 + "'"
+	Else
+		cFilSD1 := cFilSD1 + "'.And.DTOS(D1_DTDIGIT)>='"+DTOS(MV_PAR03)+"'.And.DTOS(D1_DTDIGIT)<='"+DTOS(MV_PAR04)+"'"
+	Endif
+	IndRegua("SD1",cArqSD1,cKeySD1,,cFilSD1,"Selecionando Registros...")
+	nIndex := RetIndex("SD1")
+	dbSelectArea("SD1")
+	dbSetIndex(cArqSD1+OrdBagExt())
+	dbSetOrder(nIndex+1)
+	nFldSD1 := FieldPos( "D1_CUSFF"+If( (MV_PAR09 == 1),"1",Str( MV_PAR09,1 ) ) )
+Endif
+
+dbSelectArea("SD2")
+dbSetOrder(2)
+cArqSD2 := CriaTrab(NIL,.F. )
+cKeySD2 := IndexKey()
+cFilSD2 := "D2_FILIAL='"+xFilial("SD2")+"'.And.D2_TP>='"+MV_PAR05+;
+           "'.And.D2_TP<='"+MV_PAR06+"'.And.D2_COD>='"+MV_PAR07+;
+           "'.And.D2_COD<='"+MV_PAR08+"'.And.D2_LOCAL>='"+MV_PAR01+;
+           "'.And.D2_LOCAL<='"+MV_PAR02+"'"
+cFilSD2 := cFilSD2 + ".And.DTOS(D2_EMISSAO)>='"+DTOS(MV_PAR03)+"'.And.DTOS(D2_EMISSAO)<='"+DTOS(MV_PAR04)+"'"
+IndRegua("SD2",cArqSD2,cKeySD2,,cFilSD2,"Selecionando Registros...")
+nIndex1 := RetIndex("SD2")
+dbSelectArea("SD2")
+dbSetIndex(cArqSD2+OrdBagExt())
+dbSetOrder(nIndex1+1)
+nFldSD2 := FieldPos( "D2_CUSFF"+Str( MV_PAR09,1 ) )
+
+SetRegua(RecCount()*2)
+dbGoTop()
+
+While lContinua .And. !Eof()
+
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Verifica se houve interrup‡„o pelo operador      ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	#IFDEF WINDOWS
+		If lAbortPrint
+			lEnd := .T.
+	#ELSE
+		Inkey()
+		If LastKey() == 286
+			lEnd := .T.
+	#ENDIF
+			@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"
+			lContinua := .F.
+			Exit  
+		Endif
+
+	IncRegua()
+
+	If !(cCodAnt == SD2->D2_COD)
+		cCodAnt    := SD2->D2_COD
+		lDevolucao := .T.
+	Endif
+
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Despreza Notas Fiscais Lancadas Pelo Modulo do Livro Fiscal    ³
+	//³ Despreza Itens em que a TES NAO Se Ajusta a Selecao do Usuario ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	If !(D2_ORIGLAN == "LF") .And. AvalTes(D2_TES,cEstoq,cDupli)
+
+		If MV_PAR09 > 1
+			nTotLuc := nTotLuc + ConvMoeda( D2_EMISSAO,,FieldGet( nFldSD2 ),cMoeda )
+		Else
+			nTotLuc := nTotLuc + FieldGet( nFldSD2 )
+		Endif
+	
+		If MV_PAR09 > 1
+			nTotFat := nTotFat + ConvMoeda( D2_EMISSAO,,D2_TOTAL+If( (MV_PAR10 == 1),0,D2_VALIPI ),cMoeda )
+		Else
+			nTotFat := nTotFat + D2_TOTAL+If( (MV_PAR10 == 1),0,D2_VALIPI )
+		Endif
+
+		If MV_PAR11 == 1
+			dbSelectArea("SD1")
+			If dbSeek( xFilial("SD1")+SD2->D2_COD+SD2->D2_SERIE+SD2->D2_DOC+SD2->D2_ITEM,.F. )
+				//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+				//³ Despreza Notas Fiscais Lancadas Pelo Modulo do Livro Fiscal    ³
+				//³ Despreza Itens em que a TES NAO Se Ajusta a Selecao do Usuario ³
+				//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+				If !(D1_ORIGLAN == "LF") .And. AvalTes(D1_TES,cEstoq,cDupli)
+					If MV_PAR09 > 1
+						nTotLuc := nTotLuc - ConvMoeda( D1_DTDIGIT,,FieldGet( nFldSD1 ),cMoeda )
+					Else
+						nTotLuc := nTotLuc - FieldGet( nFldSD1 )
+					Endif
+
+					If MV_PAR09 > 1
+						nTotFat := nTotFat - ConvMoeda( D1_DTDIGIT,,D1_TOTAL+If( (MV_PAR10 == 1),0,D1_VALIPI ),cMoeda )
+					Else
+						nTotFat := nTotFat - D1_TOTAL+If( (MV_PAR10 == 1),0,D1_VALIPI )
+					Endif
+				Endif
+			Endif
+		Elseif MV_PAR11 == 2 .And. lDevolucao
+			dbSelectArea("SD1")
+			If dbSeek( xFilial("SD1")+SD2->D2_COD,.F. )
+				While (SD1->D1_COD == SD2->D2_COD)
+					//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+					//³ Despreza Notas Fiscais Lancadas Pelo Modulo do Livro Fiscal    ³
+					//³ Despreza Itens em que a TES NAO Se Ajusta a Selecao do Usuario ³
+					//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+					If !(D1_ORIGLAN == "LF") .And. AvalTes(D1_TES,cEstoq,cDupli)
+						If MV_PAR09 > 1
+							nTotLuc := nTotLuc - cConvMoeda( D1_DTDIGIT,,FieldGet( nFldSD1 ),cMoeda )
+						Else
+							nTotLuc := nTotLuc - FieldGet( nFldSD1 )
+						Endif
+
+						If MV_PAR09 > 1
+							nTotFat := nTotFat - ConvMoeda( D1_DTDIGIT,,D1_TOTAL+If( (MV_PAR10 == 1),0,D1_VALIPI ),cMoeda )
+						Else
+							nTotFat := nTotFat - D1_TOTAL+If( (MV_PAR10 == 1),0,D1_VALIPI )
+						Endif
+					Endif
+					dbSkip()
+				EndDo
+			Endif
+      	lDevolucao := .F.
+		Endif
+		dbSelectArea("SD2")
+		dbSkip()
+	Endif
+EndDo
+
+nTotLuc := nTotFat-nTotLuc
+
+dbGoTop()
+
+nAg1 := 0
+nAg2 := 0
+nAg3 := 0
+nAg4 := 0
+cCodAnt := ""
+
+While lContinua .And. !Eof()
+
+	nAt1 := 0
+	nAt2 := 0
+	nAt3 := 0
+	nAt4 := 0
+
+	lPassou := .F.
+	cTipant := D2_TP
+
+	While lContinua .And. !Eof() .And. (D2_TP == cTipant)
+
+		If lEnd
+			@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"
+			lContinua := .F.
+		Else
+			dbSelectArea("SB1")
+			dbSeek( xFilial("SB1") + SD2->D2_COD,.F. ) 
+			dbSelectArea("SD2")
+
+			nAp1 := 0
+			nAp2 := 0
+			nAp3 := 0
+			nAp4 := 0
+
+			If !(cCodAnt == SD2->D2_COD)
+				cCodAnt    := SD2->D2_COD
+				lDevolucao := .T.
+			Endif
+
+			While lContinua .And. !Eof() .And. D2_TP+D2_COD == cTipant+cCodAnt
+				
+				IF lEnd
+					@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"
+					lContinua := .F.
+				Else
+					IncRegua()
+					//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+					//³ Despreza Notas Fiscais Lancadas Pelo Modulo do Livro Fiscal    ³
+					//³ Despreza Itens em que a TES NAO Se Ajusta a Selecao do Usuario ³
+					//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+					If !(D2_ORIGLAN == "LF") .And. AvalTes(D2_TES,cEstoq,cDupli)
+
+						nAp1 := nAp1 + D2_QUANT
+
+						If MV_PAR09 > 1
+							nAp2 := nAp2 + ConvMoeda( D2_EMISSAO,,FieldGet( nFldSD2 ),cMoeda )
+						Else
+							nAp2 := nAp2 + FieldGet( nFldSD2 )
+						Endif
+
+						If MV_PAR09 > 1
+							nAp3 := nAp3 + ConvMoeda( D2_EMISSAO,,(D2_TOTAL+If( (MV_PAR10 == 1),D2_VALIPI,0 )),cMoeda )
+						Else
+							nAp3 := nAp3 + (D2_TOTAL+If( (MV_PAR10 == 1),D2_VALIPI,0 ))
+						Endif
+
+						If MV_PAR09 > 1
+				         nAp4 := nAp4 + (SD2->D2_QUANT*ConvMoeda(SB1->B1_DATREF,,SB1->B1_CUSTD,cMoeda))
+						Else
+							nAp4 := nAp4 + (SD2->D2_QUANT*SB1->B1_CUSTD)
+						Endif
+
+						If MV_PAR11 == 1
+							dbSelectArea("SD1")
+							If dbSeek( xFilial("SD1")+SD2->D2_COD+SD2->D2_SERIE+SD2->D2_DOC+SD2->D2_ITEM,.F. )
+								//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+								//³ Despreza Notas Fiscais Lancadas Pelo Modulo do Livro Fiscal    ³
+								//³ Despreza Itens em que a TES NAO Se Ajusta a Selecao do Usuario ³
+								//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+								If !(D1_ORIGLAN == "LF") .And. AvalTes(D1_TES,cEstoq,cDupli)
+
+									nAp1 := nAp1 - D1_QUANT
+
+									If MV_PAR09 > 1
+										nAp2 := nAp2 - ConvMoeda( D1_DTDIGIT,,FieldGet( nFldSD1 ),cMoeda )
+									Else
+										nAp2 := nAp2 - FieldGet( nFldSD1 )
+									Endif
+
+									If MV_PAR09 > 1
+										nAp3 := nAp3 - ConvMoeda( D1_DTDIGIT,,(D1_TOTAL+If( (MV_PAR10 == 1),D1_VALIPI,0 )),cMoeda )
+									Else
+										nAp3 := nAp3 - (D1_TOTAL+If( (MV_PAR10 == 1),D1_VALIPI,0 ))
+									Endif
+
+									If MV_PAR09 > 1
+										nAp4 := nAp4 - (D1_QUANT*ConvMoeda(SB1->B1_DATREF,,SB1->B1_CUSTD,cMoeda))
+									Else
+										nAp4 := nAp4 - (D1_QUANT*SB1->B1_CUSTD)
+									Endif
+								Endif
+							Endif
+						Elseif MV_PAR11 == 2 .And. lDevolucao
+							dbSelectArea("SD1")
+							If dbSeek( xFilial("SD1")+SD2->D2_COD,.F. )
+								While (D1_COD == cCodAnt)
+									//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+									//³ Despreza Notas Fiscais Lancadas Pelo Modulo do Livro Fiscal    ³
+									//³ Despreza Itens em que a TES NAO Se Ajusta a Selecao do Usuario ³
+									//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+									If !(D1_ORIGLAN == "LF") .And. AvalTes(D1_TES,cEstoq,cDupli)
+
+										nAp1 := nAp1 - D1_QUANT
+
+										If MV_PAR09 > 1
+											nAp2 := nAp2 - ConvMoeda( D1_DTDIGIT,,FieldGet( nFldSD1 ),cMoeda )
+										Else
+											nAp2 := nAp2 - FieldGet( nFldSD1 )
+										Endif
+
+										If MV_PAR09 > 1
+											nAp3 := nAp3 - ConvMoeda( D1_DTDIGIT,,(D1_TOTAL+If( (MV_PAR10 == 1),D1_VALIPI,0 )),cMoeda )
+										Else
+											nAp3 := nAp3 - (D1_TOTAL+If( (MV_PAR10 == 1),D1_VALIPI,0 ))
+										Endif
+
+										If MV_PAR09 > 1
+											nAp4 := nAp4 - (D1_QUANT*ConvMoeda(SB1->B1_DATREF,,SB1->B1_CUSTD,cMoeda))
+										Else
+											nAp4 := nAp4 - (D1_QUANT*SB1->B1_CUSTD)
+										Endif
+									Endif
+									dbSkip()
+								EndDo
+							Endif
+							lDevolucao := .F.
+						Endif
+
+                  dbSelectArea("SD2")
+               Endif
+
+			      dbSelectArea("SD2")
+					dbSkip()
+				Endif
+			EndDo
+
+			If nAp1 != 0 .Or. nAp2 != 0 .Or. nAp3 != 0 .Or. nAp4 != 0
+
+			If li > 55
+				Cabec(titulo,cabec1,cabec2,wnrel,Tamanho,nTipo)
+			Endif
+
+			lPassou := .T.
+			nCntImpr:= nCntImpr + 1
+			@ li,000 PSAY cTipant
+			@ li,004 PSAY cCodAnt
+			@ li,021 PSAY Substr(SB1->B1_DESC,1,30)
+			@ li,053 PSAY nAp1 PICTURE PesqPictQt("D2_QUANT",10)
+			@ li,065 PSAY SB1->B1_UM
+			@ li,069 PSAY nAp2 PICTURE TM(nAp2,14)
+			@ li,085 PSAY (nAp2/nAp1) PICTURE TM(nAp2,14)
+			@ li,101 PSAY nAp3 PICTURE TM(nAp3,14)
+			If nAp3 != 0
+				@ li,117 PSAY IIF(nAp3-nAp2>0,"+","-")
+				@ li,118 PSAY 100*(nAp3-nAp2)/nAp3 PICTURE "999.9"
+			Endif
+			If nTotFat != 0
+				@ li,126 PSAY 100*nAp3/nTotFat PICTURE "999.9"
+			Endif
+			If nTotLuc != 0
+				@ li,133 PSAY IIF(nAp3-nAp2>0,"+","-")
+				@ li,134 PSAY 100*(nAp3-nAp2)/nTotLuc PICTURE "999.9"
+			Endif
+			@ li,141 PSAY nAp4 PICTURE TM(nAp4,14)
+			If nAp2 != 0
+				@ li,157 PSAY (100*nAp4/nAp2)-100 PICTURE "9999.9"
+			Endif
+
+			li := li + 1
+			nAt1 := nAt1+nAp1
+			nAt2 := nAt1+nAp2
+			nAt3 := nAt1+nAp3
+			nAt4 := nAt1+nAp4
+		Endif
+	Endif
+	EndDo
+
+	If lPassou
+		@ li,00 PSAY "Sub Total : " + cTipant
+		@ li,53 PSAY nAt1 PICTURE PesqPictQt("D2_QUANT",10)
+		@ li,69 PSAY nAt2 PICTURE TM(nAt2,14)
+		@ li,85 PSAY (nAt2/nAT1) PICTURE TM(nAt2,14)
+		@ li,101 PSAY nAt3 PICTURE TM(nAt3,14)
+		If nAt3#0
+			@ li,117 PSAY IIF(nAt3-nAt2>0,"+","-")
+			@ li,118 PSAY 100*(nAt3-nAt2)/nAt3 PICTURE "999.9"
+		Endif
+		@ li,126 PSAY 100*nAt3/nTotfat PICTURE "999.9"
+		If nTotLuc != 0
+			@ li,133 PSAY IIF(nAt3-nAt2>0,"+","-")
+			@ li,134 PSAY 100*(nAt3-nAt2)/nTotLuc PICTURE "999"
+		Endif
+		@ li,141 PSAY nAt4 PICTURE tm(nAt4,14)
+		If nAt2 != 0
+			@ li,157 PSAY (100*NaT4/NaT2)-100 PICTURE "9999.9"
+		Endif
+
+		li := li + 2
+		nAg1 := nAg1+nAt1
+		nAg2 := nAg1+nAt2
+		nAg3 := nAg1+nAt3
+		nAg4 := nAg1+nAt4
+	Endif
+EndDo
+
+If li != 80
+	@ li,00 PSAY "T O T A L ---> "
+	@ li,53 PSAY nAg1 PICTURE PesqPictQt("D2_QUANT",10)
+	@ li,69 PSAY nAg2 PICTURE TM(nAg2,14)
+	@ li,85 PSAY (nAg2/nAg1) PICTURE TM(nAg2,14)
+	@ li,101	PSAY nAg3 PICTURE TM(nAg3,14)
+	If nAg3 != 0
+		@ li,117 PSAY IIF(nAg3-nAg2>0,"+","-")
+		@ li,118 PSAY 100*(nAg3-nAg2)/nAg3 PICTURE "999.9"
+	Endif
+	If nTotFat != 0
+		@ li,126 PSAY 100*nAg3/nTotFat PICTURE "999.9"
+	Endif
+	If nTotluc != 0
+		@ li,133 PSAY IIF(nAg3-nAg2>0,"+","-")
+		@ li,134 PSAY 100*(nAg3-nAg2)/nTotLuc PICTURE "999"
+	Endif
+	@ li,141 PSAY nAg4 PICTURE tm(nAg4,14)
+	If nAg2#0
+		@ li,157 PSAY (100*nAg4/nAg2)-100 PICTURE "9999.9"
+	Endif
+Endif
+
+If li != 80
+	Roda(nCntImpr,cRodaTxt,Tamanho)
+Endif
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Devolve a condicao original do arquivo principal             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+dbSelectArea(cString)
+Set Filter To
+Set Order To 1
+
+Set device to Screen
+
+If aReturn[5] == 1
+	Set Printer To
+	dbCommitAll()
+	OurSpool(wnrel)
+Endif
+
+dbSelectArea("SD1")
+RetIndex("SD1")
+dbSelectArea("SD2")
+RetIndex("SD2")
+
+If MV_PAR11 # 3
+	fErase( cArqSD1+OrdBagExt() )
+Endif
+fErase( cArqSD2+OrdBagExt() )
+
+MS_FLUSH()
+

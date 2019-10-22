@@ -1,0 +1,27 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 20/08/01
+
+User Function Adtsespf()        // incluido pelo assistente de conversao do AP5 IDE em 20/08/01
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("_NVALADTS,_NPERADTS,_CTIPADTS,_NQTDEADT,")
+
+_nValAdts := 0.00
+_nPerAdts := 1.00
+_cTipAdts := SRA->RA_ADTPOSE
+_nQtdeAdt := ( Val(Subs(Dtos(dDataBase),1,6) ) -; 
+               Val(Subs(Dtos(SRA->RA_ADMISSA),1,6) ))/100
+If _nQtdeAdt >= 1
+
+   _nValAdts := ( ( SalMes*_nPerAdts )/100)* Int(_nQtdeAdt )
+
+EndIf
+
+// Substituido pelo assistente de conversao do AP5 IDE em 20/08/01 ==> __Return( _nValAdts )
+Return( _nValAdts )        // incluido pelo assistente de conversao do AP5 IDE em 20/08/01
+
