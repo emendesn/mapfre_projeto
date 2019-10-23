@@ -1,0 +1,57 @@
+MsgStop("Iniciando Procedimento")
+Processa( { || Execute(Muda) } )
+Return
+
+Function Muda
+/////////////
+DbSelectArea("SN4")
+DbSetOrder(1)
+DbGoTop()
+ProcRegua(RecCount())
+While !Eof()
+ _Flag3 := .T.
+ _Flag4 := .T.
+ _FILIAL := N4_FILIAL
+ _CBASE  := N4_CBASE
+ _ITEM   := N4_ITEM
+ _TIPO   := N4_TIPO
+ _DATA   := N4_DATA
+ While N4_FILIAL==_FILIAL .AND. N4_CBASE==_CBASE .AND. N4_ITEM==_ITEM .AND. ;
+  N4_TIPO==_TIPO .and. N4_DATA==_DATA
+  IF N4_OCORR=="06"
+   IF _FLAG3 .AND. ALLTRIM(N4_TIPOCNT)=="3"
+    _FLAG3 := .F.
+    DBSKIP()
+    LOOP
+   END
+   IF _FLAG4 .AND. ALLTRIM(N4_TIPOCNT)=="4"
+    _FLAG4 := .F.
+    DBSKIP()
+    LOOP
+   END
+   DbSelectArea("SN3")
+   DbSeek(_FILIAL+_CBASE+_ITEM+_TIPO)
+   IF N3_FILIAL==_FILIAL .AND. N3_CBASE==_CBASE .AND. N3_ITEM==_ITEM .AND. ;
+    N3_TIPO==_TIPO
+    IF ALLTRIM(SN4->N4_TIPOCNT)=="3"
+     RECLOCK("SN3")
+     REPLACE N3_VRDBAL1 WITH (N3_VRDBAL1-SN4->N4_VLROC1)
+     REPLACE N3_VRDBAL3 WITH (N3_VRDBAL3-SN4->N4_VLROC3)
+     REPLACE N3_VRDACM1 WITH (N3_VRDACM1-SN4->N4_VLROC1)
+     REPLACE N3_VRDACM3 WITH (N3_VRDACM3-SN4->N4_VLROC3)
+     MSUNLOCK()
+    END
+    DBSELECTAREA("SN4")
+    RECLOCK("SN4")
+    DBDELETE()
+    MSUNLOCK()
+   END
+  END
+  DbSelectArea("SN4")
+  IncProc()
+  DbSkip()
+ END
+End
+DbCommitAll()
+MsgStop("Procedimento Finalizado")
+Return

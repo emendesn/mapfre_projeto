@@ -1,0 +1,420 @@
+Group CESVI_DESENVOLVIMENTO
+   Version=7.0
+   VSSDB=
+   HasProperties=1
+   Properties
+      BeforeApply=
+      AfterApply=
+      Icon=
+      ID=
+      Version=
+      PalmName=
+      OutPut=
+   End
+   ProjectsCount=8
+   Project Faturamento
+      FoldersCount=4
+      Folder Relatorios
+         VSSPath=Relatorios
+         FilesCount=7
+         File \MP10\protheus 10\my projects\NFCESVI_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RFATR01_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RFATA02.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RFATR01_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\pfatr001.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\nfimpres.PRW
+             Type=T
+         End
+         File \protheus 10\my projects\NFDETEC.PRW
+             Type=T
+         End
+      End
+      Folder Execblock
+         VSSPath=Execblock
+         FilesCount=1
+         File \MP10\protheus 10\my projects\C5nat_AP5.prx
+             Type=T
+         End
+      End
+      Folder Rotinas
+         VSSPath=Rotinas
+         FilesCount=2
+         File \MP10\protheus 10\my projects\FATURAMENTO\ATUPEDV.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\FATURAMENTO\FATA001.prw
+             Type=T
+         End
+      End
+      Folder Ponto Entrada
+         VSSPath=Ponto Entrada
+         FilesCount=9
+         File \MP10\protheus 10\my projects\M140bar_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\M241bar_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Mta010ok_AP5.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Sf2460i_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Mta010e_AP5.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\tmkva1.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\tmkr3a.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\tmkr03.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\MTDescrNFE.prw
+             Type=T
+         End
+      End
+   End
+   Project Financeiro
+      FoldersCount=6
+      Folder Relatorios
+         VSSPath=Relatorios
+         FilesCount=17
+         File \MP10\protheus 10\my projects\Finr131_AP5.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\CARTA.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\CARTA01.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\FINR130x.PRX
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\pfinr013.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR015.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\pfinr016.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\pfinr04.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR130.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR100.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR230.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR470.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR190.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\CESVI150.PRX
+             Type=T
+         End
+         File \MP10\Protheus 10\my projects\Financeiro\PFINR017.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR014.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\PFINR015.prw
+             Type=T
+         End
+      End
+      Folder Gatilhos
+         VSSPath=Gatilhos
+         FilesCount=3
+         File \MP10\protheus 10\my projects\F200var.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\F650var.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\numsac.prw
+             Type=T
+         End
+      End
+      Folder Execblock
+         VSSPath=Execblock
+         FilesCount=3
+         File \MP10\protheus 10\my projects\bradesco.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\hsbccod.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\F150ORD.PRW
+             Type=T
+         End
+      End
+      Folder Rotinas
+         VSSPath=Rotinas
+         FilesCount=7
+         File \MP10\protheus 10\my projects\CESVI.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\CNABXFUN.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\fina001.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\fina002.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\pfina012.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\FinExp01.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\LOCENT.prw
+             Type=T
+         End
+      End
+      Folder Ponto Entrada
+         VSSPath=Ponto Entrada
+         FilesCount=8
+         File \MP10\protheus 10\my projects\Ms520vld_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\F200DB1.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\F200DB2.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\F200OCR.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\FA050GRV.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\FA050DEL.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\f340flcp.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Financeiro\F340CMP.prw
+             Type=T
+         End
+      End
+      Folder CNABHSBC
+         VSSPath=Nova Pasta6
+         FilesCount=3
+         File \MP10\protheus 10\my projects\HSBCCOB.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\bradesco.PRW
+             Type=T
+         End
+         File \protheus 10\my projects\HSBCCOB.PRW
+             Type=T
+         End
+      End
+   End
+   Project Contabilidade
+      FoldersCount=5
+      Folder Relatorios
+         VSSPath=Relatorios
+         FilesCount=2
+         File \MP10\protheus 10\my projects\CONR330M.PRX
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Contabilidade\CTBR001.prw
+             Type=T
+         End
+      End
+      Folder Gatilhos
+         VSSPath=Gatilhos
+         FilesCount=0
+      End
+      Folder Execblock
+         VSSPath=Execblock
+         FilesCount=5
+         File \MP10\protheus 10\my projects\LP_10165.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\LP_RATEIO.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Contabilidade\PCTBA001.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Contabilidade\PCTBA002.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Contabilidade\PCTBA003.prw
+             Type=T
+         End
+      End
+      Folder Rotinas
+         VSSPath=Rotinas
+         FilesCount=3
+         File \MP10\protheus 10\my projects\Iteste_AP5.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Teste_AP5.prw
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Contabilidade\CTBEXP01.PRW
+             Type=T
+         End
+      End
+      Folder Ponto Entrada
+         VSSPath=Ponto Entrada
+         FilesCount=0
+      End
+   End
+   Project Ativo Fixo
+      FoldersCount=5
+      Folder Relatorios
+         VSSPath=Relatorios
+         FilesCount=0
+      End
+      Folder Execblock
+         VSSPath=Execblock
+         FilesCount=0
+      End
+      Folder Ponto Entrada
+         VSSPath=Ponto Entrada
+         FilesCount=0
+      End
+      Folder Gatilhos
+         VSSPath=Gatilhos
+         FilesCount=0
+      End
+      Folder Rotinas
+         VSSPath=Rotinas
+         FilesCount=2
+         File \MP10\protheus 10\my projects\Mudasn_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\Sn3psn4_AP5.PRW
+             Type=T
+         End
+      End
+   End
+   Project Fiscal
+      FoldersCount=5
+      Folder Relatorios
+         VSSPath=Relatorios
+         FilesCount=0
+      End
+      Folder Ponto Entrada
+         VSSPath=Ponto Entrada
+         FilesCount=1
+         File \MP10\protheus 10\my projects\ljatucf.prx
+             Type=T
+         End
+      End
+      Folder Gatilhos
+         VSSPath=Gatilhos
+         FilesCount=0
+      End
+      Folder Execblock
+         VSSPath=Execblock
+         FilesCount=0
+      End
+      Folder Rotinas
+         VSSPath=Rotinas
+         FilesCount=0
+      End
+   End
+   Project Recursos Humanos
+      FoldersCount=1
+      Folder Folha Pagamento
+         VSSPath=Folha Pagamento
+         FilesCount=10
+         File \MP10\protheus 10\my projects\RecursosHumanos\fBoxFrent.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\fBoxVerso.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\Fichai_rhf.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\IMPESP.PRX
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\IMPFER.PRX
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\REC_PCL.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\Adtsesp_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\Adtsespf_AP5.prx
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\Ficha_rh.PRW
+             Type=T
+         End
+         File \MP10\protheus 10\my projects\RecursosHumanos\ficha\FICHAI.PRW
+             Type=T
+         End
+      End
+   End
+   Project Ativo
+      FoldersCount=1
+      Folder Relatorio
+         VSSPath=Nova Pasta1
+         FilesCount=1
+         File \MP10\protheus 10\my projects\ativo\patir001.prw
+             Type=T
+         End
+      End
+   End
+   Project Compras
+      FoldersCount=1
+      Folder Gatilhos
+         VSSPath=Nova Pasta1
+         FilesCount=1
+         File \MP10\protheus 10\my projects\Compras\SF1100I.prw
+             Type=T
+         End
+      End
+   End
+   BatchBuild_Item0=Faturamento · Producao
+   BatchBuild_Item1=Faturamento · CPD
+   BatchBuild_Item2=Financeiro · Producao
+   BatchBuild_Item3=Financeiro · CPD
+   BatchBuild_Item4=Contabilidade · Producao
+   BatchBuild_Item5=Contabilidade · CPD
+   BatchBuild_Item6=Ativo Fixo · Producao
+   BatchBuild_Item7=Ativo Fixo · CPD
+   BatchBuild_Item8=Fiscal · Producao
+   BatchBuild_Item9=Fiscal · CPD
+   BatchBuild_Item10=X3/X6/X7/XB · Producao
+   BatchBuild_Item11=X3/X6/X7/XB · CPD
+   BatchBuild_Item12=Recursos Humanos · Producao
+   BatchBuild_Item13=Recursos Humanos · CPD
+End

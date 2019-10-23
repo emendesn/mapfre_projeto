@@ -1,0 +1,233 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 19/11/99
+#IFNDEF WINDOWS
+	#DEFINE PSAY SAY
+#ENDIF
+#INCLUDE "IMPESP.CH"
+
+User Function Impesp()        // incluido pelo assistente de conversao do AP5 IDE em 19/11/99
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("CDET,CFILSR6,CSTRING,CDESCCC,NX,NY")
+SetPrvt("NTAMLIN,NCOLUNAS,NCOLMARC,NMETADE,CMENPAD1,CMENPAD2")
+SetPrvt("ARETURN,NTAMANHO,LI,CIMPCOMP,CIMPNORM,CHEADER")
+
+#IFNDEF WINDOWS
+// Movido para o inicio do arquivo pelo assistente de conversao do AP5 IDE em 19/11/99 ==> 	#DEFINE PSAY SAY
+#ENDIF
+
+// Movido para o inicio do arquivo pelo assistente de conversao do AP5 IDE em 19/11/99 ==> #INCLUDE "IMPESP.CH"
+
+/*/
+_____________________________________________________________________________
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦Funçäo    ¦ImpEsp    ¦ Autor ¦ Fernando Joly Siquini ¦ Data ¦ 27/01/98 ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Descriçäo ¦ Rotina de Impressäo do Espelho de Ponto                    ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Sintaxe   ¦ RDMake                                                     ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦ Uso      ¦ Genérico (206/406 e maior)                                 ¦¦¦
+¦¦+-----------------------------------------------------------------------¦¦¦
+¦¦¦         ATUALIZACOES SOFRIDAS DESDE A CONSTRUÇAO INICIAL.             ¦¦¦
+¦¦+-----------------------------------------------------------------------¦¦¦
+¦¦¦Programador ¦ Data   ¦ BOPS ¦  Motivo da Alteracao                     ¦¦¦
+¦¦+------------+--------+------+------------------------------------------¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯/*/
+
+//-- Definiçäo de Variaveis
+* Caracter
+cDet      := ''
+cFilSR6   := ''
+cString   := ''
+cDescCc   := ''
+* Data
+* Array
+* Lógico
+* Númérico
+nX        := 0
+nY        := 0
+nTamLin   := 0
+nColunas  := 0
+nColMarc  := 0
+nMetade   := 0
+
+//-- Reinicializa Variaveis Private do Programa (PONR010)
+cMenpad1 := If(Len(cMenPad1)==0,Space(30),cMenPad1)
+cMenpad2 := If(Len(cMenPad2)==0,Space(19),cMenPad2)
+
+//-- Define o tamanho da linha com base no MV_ColMarc.
+aEval(aImp, { |x| nColMarc := If(Len(x)-3>nColMarc, Len(x)-3, nColMarc) } )
+nColMarc := nColMarc + If(nColMarc%2 == 0, 0, 1)
+nColunas := Max(nColuMax, nColMarc)
+
+//-- Define configuraçöes da impressäo
+nTamLin    := If((19+(nColunas*6)+29)<=80,80,132)
+aReturn[4] := If(nTamLin>80,1,2) //-- 1-Comprimido 2-Normal
+nTamanho   := If(aReturn[4]==1,'G','P')
+
+//-- Inicializa Li com 1 para näo imprimir cabecalho padrao
+Li := 01
+
+//-- Imprime Cabecalho Especifico.
+fImpCabec()
+
+//-- Imprime Marcaçöes
+For nX := 1 To Len(aImp)
+	cDet := PadR(DtoC(aImp[nX,1]),10) + Space(1) + DiaSemana(aImp[nX,1],8)
+	If Len(aImp[nX]) >= 4
+		For nY := 4 To Min(nColunas+4,Len(aImp[nX]))
+			cDet := cDet + aImp[nX,nY] + Space(1)
+		Next nY
+	Else
+		cDet := cDet + aImp[nX,2]
+	Endif	 
+	cDet := Left(cDet+Space(19+(nColunas*6)), 19+(nColunas*6)) + aImp[nX,3]
+	cDet := Left(AllTrim(cDet)+Space(nTamLin),nTamLin)
+	Impr(cDet, 'C')
+Next nX
+
+Impr(Repl('-',nTamLin), 'C')
+Impr(' ','C')
+Impr(cMenPad1 + cMenPad2 + Repl('_',31), 'C')
+Impr(Space(52) + STR0001, 'C')	//'Assinatura do Funcionario'
+
+//-- Se existirem totais, e se for selecionada sua impressäo, seräo impressos.
+If Len(aTotais) > 0 .And. nImpHrs #4
+	Impr(Repl('-',nTamLin),'C')
+	cDet := STR0002	//'T O T A I S'
+	Impr(cDet,'C')
+	Impr(' ','C')
+	If Len(aTotais) % 2 #0
+		aAdd (aTotais, Space(Len(aTotais[1])))
+	Endif
+	If nImpHrs == 1
+		cDet := STR0003	//'Cod Descricao             Calc.           Cod Descricao             Calc.       '
+	ElseIf nImpHrs == 2
+		cDet := STR0004	//'Cod Descricao                   Infor.    Cod Descricao                   Infor.'
+	Else
+		cDet := STR0005	//'Cod Descricao             Calc. Infor.    Cod Descricao             Calc. Infor.'
+	Endif
+
+	Impr(cDet,'C')
+	Impr(Repl('==',19)+Space(4)+Repl('==',19),'C')
+	nMetade := Len(aTotais) / 2
+	For nX := 1 To Len(aTotais)/2
+		cDet := aTotais[nX]+Space(4)+aTotais[nX+nMetade]
+		Impr(cDet,'C')
+	Next
+Endif
+
+Impr(Repl('-',nTamLin),'C')
+
+Return Nil
+
+/*/
+_____________________________________________________________________________
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦Funçäo    ¦fImpCabec ¦ Autor ¦ Fernando Joly Siquini ¦ Data ¦ 27/01/98 ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Descriçäo ¦ Imprime o cabecalho do espelho do ponto                    ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Sintaxe   ¦ RDMake                                                     ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦ Uso      ¦ IMPESP                                                     ¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯/*/
+// Substituido pelo assistente de conversao do AP5 IDE em 19/11/99 ==> Function fImpCabec
+Static Function fImpCabec()
+
+cDet      := ''
+cDescCc   := ''
+cImpComp  := ''
+cImpNorm  := ''
+
+cImpNorm := if(nTamanho=='P',aDriver[1],if(nTamanho=='G',aDriver[5],aDriver[3]))
+cImpComp := if(nTamanho=='P',aDriver[2],if(nTamanho=='G',aDriver[6],aDriver[4]))
+
+//-- Inicializa a impressäo
+If aReturn[4] == 1
+	@ 0,0 PSAY &(cImpComp)
+Else
+	@ 0,0 PSAY &(cImpNorm)
+Endif
+
+//-- Linha 01
+//-- Emp...: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Matr..: 99-999999  Chapa : 9999999999
+cDet := STR0006 + Left( If(Len(aInfo)>0,aInfo[03],SM0->M0_NomeCom) + Space(33), 33) 	//'Emp...: '
+cDet := cDet + STR0007 + SRA->RA_Filial + '-' + SRA->RA_Mat 	//' Matr..: '
+cDet := cDet + STR0008 + SRA->RA_Chapa		//'  Chapa : '
+Impr(cDet,'C')
+
+//-- Linha 02
+//-- End...: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Nome..: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+cDet := STR0009 + Left( If(Len(aInfo)>0,aInfo[04],SM0->M0_EndCob) + Space(33), 33)	//'End...: '
+cDet := cDet + STR0010 + Left(SRA->RA_Nome + Space(30), 30)	//' Nome..: '
+Impr(cDet,'C')
+
+//-- Linha 03
+//-- CGC...: 99.999.999/9999-99                Funcao: 9999-XXXXXXXXXXXXXXXXXXXX
+cDet := STR0011+Transform(If(Len(aInfo)>0,aInfo[08],SM0->M0_CGC),'@R ##.###.###/####-##')+Space(16)	//'CGC...: '
+cDet := cDet + STR0012 + SRA->RA_CodFunc + '-' + Left(DescFun(SRA->RA_CodFunc , SRA->RA_Filial) + Space(20), 20)	//'Funcao: '
+Impr(cDet,'C')
+
+//-- Linha 04
+//-- C.C...: 99999999-XXXXXXXXXXXXXXXXXXXXXXX  Categ.: XXXXXXXXXXXXXXX
+cDet := STR0013 + Left(AllTrim(SRA->RA_CC) + '-' + Left(DescCc(SRA->RA_CC, SRA->RA_FILIAL) + Space(23), 23) + Space(33), 33)	//'C.C...: '
+cDet := cDet + STR0014 + IF (SRA->RA_CATFUNC=="E","ESTAGIARIO",DescCateg(SRA->RA_CatFunc,15))	//' Categ.: '
+Impr(cDet,'C')
+
+//-- Linha 05
+//-- Turno.: 999-XXXXXXXXXXXXXXXXXXXXX
+fDescTno()
+cDet := STR0015 + AllTrim(SRA->RA_TnoTrab) + '-' + cString	//'Turno.: '
+Impr(cDet,'C')
+
+//-- Monta e Imprime Cabecalho das Marcacoes
+cHeader := STR0016	//'   DATA    DIA     '
+For nX := 1 to (nColunas/2)
+	cHeader := cHeader + StrZero(nX,1) + STR0017 + StrZero(nX,1) + STR0018	//'a E. '###'a S. '
+Next nX
+cHeader := cHeader + STR0019	//'Motivo de Abono           Horas'
+
+Impr(Replicate('-',nTamLin), 'C')
+Impr(cHeader, 'C')
+Impr(Replicate('-',nTamLin), 'C')
+
+Return Nil
+
+/*
+_____________________________________________________________________________
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦Funçäo    ¦fDescTno  ¦ Autor ¦ Fernando Joly Siquini ¦ Data ¦ 09/12/97 ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Descriçäo ¦ Retorna uma descriçäo do Turno de Trabalho Solicitado      ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Sintaxe   ¦ RDMake                                                     ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦ Uso      ¦ PONR010                                                    ¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯*/
+// Substituido pelo assistente de conversao do AP5 IDE em 19/11/99 ==> Function fDescTno
+Static Function fDescTno()
+
+cString := Space(50)
+cFilSR6 := If(Empty(xFilial('SR6')), xFilial('SR6'), SRA->RA_FILIAL)
+
+If SR6->(dbSeek(cFilSR6+SRA->RA_TNOTRAB,.F.))
+	cString := Left(AllTrim(SR6->R6_DESC),50)
+EndIf
+
+Return Nil

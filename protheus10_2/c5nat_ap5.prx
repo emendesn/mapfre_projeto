@@ -1,0 +1,37 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 30/07/01
+
+User Function C5nat()        // incluido pelo assistente de conversao do AP5 IDE em 30/07/01
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("CALIAS,CREC,CIND,CPEDIDO,CNAT,")
+
+
+cAlias := Alias()
+cRec   := Recno()
+cInd   := IndexOrd()
+cPedido:= SD2->D2_PEDIDO 
+cNat   := "" 
+
+dbSelectArea("SC5")
+dbSetOrder(1)
+dbSeek( xFilial("SC5") + cPedido)
+
+IF !EMPTY(SC5->C5_NATUREZ)
+   cNat := SC5->C5_NATUREZ
+Else
+   cNat := SA1->A1_NATUREZ
+Endif
+
+dbSelectArea(cAlias)
+dbSetOrder(cInd)
+dbGoto(cRec)
+
+// Substituido pelo assistente de conversao do AP5 IDE em 30/07/01 ==> __Return(cNat)
+Return(cNat)        // incluido pelo assistente de conversao do AP5 IDE em 30/07/01
+
