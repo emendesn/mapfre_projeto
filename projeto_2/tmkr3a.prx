@@ -1,0 +1,649 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+#Include "TMKR3A.CH"
+#IFNDEF WINDOWS
+ #DEFINE PSAY SAY
+#ENDIF
+
+User Function Tmkr3a()        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("WNREL,NORDEM,TAMANHO,LIMITE,TITULO,CDESC1")
+SetPrvt("CDESC2,CDESC3,NOMEPROG,CSTRING,CMOEDA,CPERG")
+SetPrvt("ARETURN,NLASTKEY,CBTXT,CBCONT,CABEC1,CABEC2")
+SetPrvt("CVENDANT,CCOND,CRG,LFIRST,NDIAS,CU0_POSTO")
+SetPrvt("COBS,CARQTRAB,NTIPO,CLINHA,NIND,LI")
+SetPrvt("M_PAG,")
+
+// Movido para o inicio do arquivo pelo assistente de conversao do AP5 IDE em 21/06/01 ==> #Include "TMKR3A.CH"
+
+#IFNDEF WINDOWS
+// Movido para o inicio do arquivo pelo assistente de conversao do AP5 IDE em 21/06/01 ==>  #DEFINE PSAY SAY
+#ENDIF
+
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡Æo    ³ TMKR3A   ³ Autor ³ LUIS MARCELO KOTAKI   ³ Data ³ 21/01/98 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡Æo ³ Orcamento                                                  ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Sintaxe   ³ TMKR3A(void)                                               ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Parametros³ PARAMIXB (Numero do Orcamento)                             ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Uso       ³ SIGATMK - Rotina de Televendas                             ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+*/
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Define Variaveis                                             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+wnrel	  := ""
+nOrdem  := ""
+tamanho := "P"
+limite  := 80
+titulo  := STR0001 //"Orcamento"
+cDesc1  := STR0002 //"Este programa ira emitir os orcamentos"
+cDesc2  := ""
+cDesc3  := ""
+nomeprog:="TMKR3A"
+cString := "SUA"
+cMoeda  := ""
+cPerg   := ""
+aReturn := { STR0003, 1,STR0004, 2, 2, 1, "",1 } //"Especial","Administracao"
+nLastKey:= 0
+wnrel	  :="TMKR3A"            
+
+If TYPE("uPorPrograma") == "U"
+	cPerg := "TMK03A"
+
+   //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   //³ Verifica as perguntas selecionadas                           ³
+   //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+   pergunte(cPerg,.F.)
+   //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+   //³ Variaveis utilizadas para parametros                         ³
+   //³ mv_par01             // De Vendedor                          ³
+   //³ mv_par02             // Ate Vendedor                         ³ 
+   //³ mv_par03             // De Data                              ³
+   //³ mv_par04             // Ate a Data                           ³ 
+   //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	wnrel:=SetPrint(cString,wnrel,cPerg,Titulo,cDesc1,cDesc2,cDesc3,.F.,,,,,.F.)
+Else
+	wnrel:=SetPrint(cString,wnrel,cPerg,Titulo,cDesc1,cDesc2,cDesc3,.F.,,,,,.F.)
+Endif
+
+If ( nLastKey == 27 .Or. LastKey() == 27 )
+   Return(.F.)
+Endif
+
+SetDefault(aReturn,cString)
+
+If ( nLastKey == 27 .Or. LastKey() == 27 )
+   Return(.F.)
+Endif
+
+RptStatus({|| C03AImp() })// Substituido pelo assistente de conversao do AP5 IDE em 21/06/01 ==> RptStatus({|| Execute(C03AImp) })
+
+/*/
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡Æo    ³ C03A     ³ Autor ³ LUIS MARCELO KOTAKI   ³ Data ³ 07/11/97 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡Æo ³ Chamada do Relatorio                                       ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ TMKR3A			                                            ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+/*/
+// Substituido pelo assistente de conversao do AP5 IDE em 21/06/01 ==> Function C03AImp
+Static Function C03AImp()
+
+cPerg 	:= "TMK03A"
+cbtxt    := ""
+cbCont   := 0
+Cabec1   := ""
+Cabec2   := ""
+cVendAnt := ""
+cCond		:= ""
+cRG		:= ""
+lFirst	:=.F.
+nDias		:= 0
+cU0_POSTO:= GetMv("MV_POSTO")
+cObs 		:= ""
+cArqTrab := ""
+nTipo	  	:= 0
+cLinha	:= ""
+nInd		:= ""
+
+cMoeda := STR0006 //"Valores em R$"
+titulo := titulo+" "+cMoeda
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Monta o Cabecalho de acordo com o tipo de emissao            ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+//Cabec1:=OemToAnsi("  Filial      Or‡amento Vendedor                        Data Or‡am        Status")
+Cabec1 := STR0005
+Cabec2 := " "
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis utilizadas para Impressao do Cabecalho e Rodape    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cbtxt    := SPACE(10)
+cbcont   := 0
+Li       := 80
+m_pag    := 1
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Verifica se deve comprimir ou nao                            ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+nTipo := IIF(aReturn[4]==1,15,18)
+
+SetRegua(RecCount())		// Total de Elementos da regua
+
+If TYPE("uPorPrograma") == "U"
+
+	// Chamado pelo MNU - Relatorio de Or‡amentos
+	cArqTrab := CriaTrab("",.F.)
+	IndRegua(cString,cArqTrab,"SUA->UA_FILIAL+SUA->UA_VEND+DTOS(SUA->UA_EMISSAO)",,,STR0007) //"Selecionando Registros..."
+	dbCommit()	
+
+	DbSelectArea("SUA")
+	Set Softseek On
+	DbSeek(xFilial("SUA")+(mv_par01)) //Vendedor
+	Set Softseek off
+	
+	While (!Eof()) .and. ((SUA->UA_Filial+SUA->UA_Vend >= xFilial("SUA")+mv_par01) .and. (SUA->UA_Filial+SUA->UA_Vend <= xFilial("SUA")+mv_par02))                   
+
+      IF LastKey() == 27
+         @ Prow()+1,001 PSAY STR0008 //"CANCELADO PELO OPERADOR"
+         Exit
+      Endif
+	
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Verifica intervalo                                       ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If (SUA->UA_EMISSAO > Mv_par04) .OR. (SUA->UA_EMISSAO < Mv_par03)
+		   DbSkip()
+			Loop
+	   Endif		
+
+		If !Empty(Mv_Par05) .and. !Empty(Mv_Par06)
+   		If SUA->UA_NUM < Mv_Par05 .or. SUA->UA_NUM > Mv_Par06
+		      DbSkip()
+			   Loop
+	      Endif		
+	   Endif		
+
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Verifica Orcamento                                       ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If SUA->UA_OPER <> "O"
+		   DbSkip()
+			Loop
+	   Endif		
+
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Verifica Orcam.  Cancelados                              ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If SUA->UA_CANC == "S"
+		   DbSkip()
+			Loop
+	   Endif		
+	
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Impressao do Cabecalho.                                  ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If Li > 55
+			cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+		EndIf
+
+	   If lFirst
+	      cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+		Endif	
+
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Impressao do Or‡amento                                   ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		DbSelectArea("SA3")
+		DbSetorder(1)
+		If DbSeek(xFilial("SA3")+SUA->UA_VEND)
+			cVendAnt  := SA3->A3_NOME
+		Endif
+
+	   lFirst:=.t.
+		incregua()
+		
+		DbSelectArea("SUA")	
+		@ Li,004 PSAY xFilial("SUA") Picture "99"
+		@ Li,014 PSAY SUA->UA_Num 		  Picture "999999"
+		@ Li,024 PSAY Alltrim(SUA->UA_Vend)+" - "+Left(cVendAnt,20)
+	   @ li,056 PSAY SUA->UA_Emissao 	  Picture "99/99/99"
+		@ li,076 PSAY SUA->UA_Status
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+
+		cCond := ""
+		DbSelectArea("SE4")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SE4")+SUA->UA_CONDPG)
+			cCond:=E4_CODIGO+" - "+E4_DESCRI
+		Endif
+
+		cRg := ""
+		DbSelectArea("SA1")
+		DbSetOrder(1)
+		DbSeek(xFilial("SA1")+SUA->UA_CLIENTE+SUA->UA_LOJA)
+		If !Empty(A1_INSCR)
+	    	cRg := A1_INSCR
+	   Else
+		   cRg := A1_RG
+		Endif			
+
+		@ Li,001 PSAY STR0009+cCond  //"Cond.Pagto: "
+		@ Li,040 PSAY STR0010+A1_COD+" - "+LEFT(A1_NOME,20) //"Cliente: "
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+
+	   @ Li,001 PSAY STR0011 +cRg //"Inscr.Estadual/RG: "
+		@ Li,040 PSAY STR0012 +SA1->A1_CGC //"CPF/CGC:"
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+	
+		@ Li,001 PSAY OemToAnsi(STR0013)+SUA->UA_ENDCOB //"Endere‡o p/ Cobranca: "
+		Li := Li+1
+		@ Li,001 PSAY STR0014 //"Compl.: "
+		@ Li,040 PSAY STR0015+SUA->UA_CEPC //"Cep: "
+		Li := Li+1
+		@ Li,001 PSAY STR0016+SUA->UA_BAIRROC //"Bairro: "
+		@ Li,040 PSAY STR0017+SUA->UA_MUNC+"/"+SUA->UA_ESTC //"Cidade/UF: "
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+		
+		@ Li,001 PSAY OemToAnsi(STR0018)+SUA->UA_ENDENT //"Endere‡o p/ Entrega: "
+		Li := Li+1
+		@ Li,001 PSAY STR0014 //"Compl.: "
+		@ Li,040 PSAY STR0015+SUA->UA_CEPE //"Cep: "
+		Li := Li+1
+		@ Li,001 PSAY STR0016+SUA->UA_BAIRROE //"Bairro: "
+		@ Li,040 PSAY STR0017+SUA->UA_MUNE+"/"+SUA->UA_ESTE //"Cidade/UF: "
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+	
+	   @ Li,001 PSAY STR0019 +A1_TEL //"TeleFone: "
+
+		DbSelectArea("SA4")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SA4")+SUA->UA_TRANSP)
+			@ Li,040 PSAY STR0020 +A4_COD+" - "+LEFT(A4_NOME,20) //"Transp.: "
+			Li := Li+2
+		Else
+			Li := Li+1	
+		Endif	
+
+		@ Li,001 PSAY STR0021 //"Obs:"
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Imprime o campo memo Observacao.                             ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If ! Empty(SUA->UA_CODOBS)
+			cObs := MSMM(SUA->UA_CODOBS,43)
+			nInd := 1
+			While .T.
+				cLinha := Substr(cObs,nInd,43)
+				If ! Empty(cLinha)
+					@ li,006 PSAY cLinha
+					Li := Li+1
+				Else
+					Exit
+				Endif	
+				nInd := nInd + 43
+			End
+		Endif
+		Li := Li+1
+		@ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+		
+   	@ Li,001 PSAY OEMTOANSI(STR0022) //OemtoAnsi("Codigo          Descri‡„o              Un     Qtde.     Vlr. Unit.        Total") 
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+
+	   DbSelectArea("SUB")
+		DbSetOrder(1)
+		DbSeek(xFilial("SUB")+SUA->UA_NUM)
+		While (.not. Eof()) .and. (xFilial("SUB")+SUA->UA_Num == SUB->UB_FILIAL+SUB->UB_NUM)
+
+         DbSelectArea("SB1")
+         DbSetOrder(1)
+         If DbSeek(xFilial("SB1")+SUB->UB_PRODUTO) 
+         	@ Li,001 PSAY B1_COD
+         	@ Li,017 PSAY Left(B1_DESC,20)
+         	@ Li,040 PSAY B1_UM
+			Endif	
+         @ Li,043 PSAY SUB->UB_QUANT   Picture "@Z 999999,99"
+         @ Li,053 PSAY SUB->UB_VRUNIT  Picture "@Z 99,999,999.99"
+         @ Li,067 PSAY SUB->UB_VLRITEM Picture "@Z 99,999,999.99"			
+
+			DbSelectArea("SUB")
+         DbSkip()
+         Li := Li+1
+         If Li > 55
+            cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+         EndIf
+		End
+
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+		@ Li,000 PSAY Padc(STR0023,80) //"Forma de Pagamento"
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+		@ Li,001 PSAY STR0024 //"Data"
+		@ Li,022 PSAY STR0025 //"Valor"
+		@ Li,038 PSAY STR0026 //"Forma" 
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+
+		DbSelectArea("SUA")
+		If ALLTRIM(SUA->UA_STATUS) == "SUP"
+
+		   DbSelectArea("SL4")
+			DbSetOrder(1)
+			DbSeek(xFilial("SL4")+SUA->UA_NUM)
+			While (! Eof()) .and. (xFilial("SL4")+L4_Num == SUA->UA_FILIAL+SUA->UA_NUM)
+            Li := Li+1
+            If Li > 55
+               cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+            EndIf
+            @ Li,001 PSAY L4_Data
+            @ Li,014 PSAY L4_Valor Picture "@Z 99,999,999.99"
+            @ Li,040 PSAY L4_Forma Picture "@!"
+
+				DbSelectarea("SL4")
+            DbSkip()
+		   End			
+	   Endif
+
+     	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     	//³ Procuro a validade de acordo com o posto de venda   ³
+     	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		DbSelectArea("SU7")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SU7")+SUA->UA_OPERADO)
+      	If ! Empty(SU7->U7_POSTO)
+		 		cU0_POSTO := SU7->U7_POSTO
+			Endif	
+		Endif
+
+		nDias := 0
+		DbSelectArea("SU0")
+		DbSetorder(1)
+		If Dbseek(xFilial("SU0")+cU0_POSTO)
+			nDias := U0_VALIDAD
+		Endif					
+
+		Li := Li+1
+		If nDias > 1
+	  	   @ Li,001 PSAY OemtoAnsi(STR0027+StrZero(nDias,3)+STR0028) //"Este or‡amento ‚ valido por "," dias."
+		Else
+	  	   @ Li,001 PSAY OemtoAnsi(STR0027+StrZero(nDias,3)+STR0029) //"Este or‡amento ‚ valido por "
+		Endif				
+
+		Li := Li+1
+		dbSelectArea("SUA")
+		DbSkip()
+	End	
+Else
+	// Chamado pelo Programa TMKA010 - PONTO DE ENTRADA
+
+	DbSelectArea("SUA")
+ 	DbSetOrder(1) 
+	If DbSeek(xFilial("SUA")+PARAMIXB) //Numero do Orcamento
+
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Impressao do Cabecalho.                                  ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If Li > 55
+			cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+		EndIf
+
+	   If lFirst
+			cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+		Endif	
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Impressao Do Orcamento                                   ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		DbSelectArea("SA3")
+		If DbSeek(xFilial("SA3")+SUA->UA_VEND)
+			cVendAnt  := SA3->A3_NOME
+		Endif
+		
+	   lFirst:=.t.
+		DbSelectArea("SUA")	
+
+		@ Li,004 PSAY xFilial("SUA") Picture "99"
+		@ Li,014 PSAY SUA->UA_Num 		  Picture "999999"
+		@ Li,024 PSAY Alltrim(SUA->UA_Vend)+" - "+Left(cVendAnt,20)
+	   @ li,056 PSAY SUA->UA_Emissao 	  Picture "99/99/99"
+		@ li,076 PSAY SUA->UA_Status
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+	
+		cCond := ""
+		DbSelectArea("SE4")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SE4")+SUA->UA_CONDPG)
+			cCond:=E4_CODIGO+" - "+E4_DESCRI
+		Endif
+
+		cRg := ""
+		DbSelectArea("SA1")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SA1")+SUA->UA_CLIENTE+SUA->UA_LOJA)
+			If !Empty(A1_INSCR)
+	    		cRg :=A1_INSCR
+	   	Else
+		   	cRg :=A1_RG
+			Endif
+		Endif
+		
+		@ Li,001 PSAY STR0009 +cCond  //"Cond.Pagto: "
+		@ Li,040 PSAY STR0010+A1_COD+" - "+LEFT(A1_NOME,20) //"Cliente: "
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+
+	   @ Li,001 PSAY STR0011+cRg //"Inscr.Estadual/RG: "
+		@ Li,040 PSAY STR0012 +SA1->A1_CGC //"CPF/CGC:"
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+	
+		@ Li,001 PSAY OemToAnsi(STR0013)+SUA->UA_ENDCOB //"Endere‡o p/ Cobran‡a: "
+		Li := Li+1
+		@ Li,001 PSAY STR0014 //"Compl.: "
+		@ Li,040 PSAY STR0015+SUA->UA_CEPC //"Cep: "
+		Li := Li+1
+		@ Li,001 PSAY STR0016+SUA->UA_BAIRROC //"Bairro: "
+		@ Li,040 PSAY STR0017+SUA->UA_MUNC+"/"+SUA->UA_ESTC //"Cidade/UF: "
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+		
+		@ Li,001 PSAY OemToAnsi(STR0018)+SUA->UA_ENDENT //"Endere‡o p/ Entrega: "
+		Li := Li+1
+		@ Li,001 PSAY STR0014 //"Compl.: "
+		@ Li,040 PSAY STR0015+SUA->UA_CEPE //"Cep: "
+		Li := Li+1
+		@ Li,001 PSAY STR0016+SUA->UA_BAIRROE //"Bairro: "
+		@ Li,040 PSAY STR0017+SUA->UA_MUNE+"/"+SUA->UA_ESTE //"Cidade/UF: "
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1
+	
+	   @ Li,001 PSAY STR0019+A1_TEL //"TeleFone: "
+
+		DbSelectArea("SA4")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SA4")+SUA->UA_TRANSP)
+			@ Li,040 PSAY STR0020+A4_COD+" - "+LEFT(A4_NOME,20) //"Transp.: "
+			Li := Li+2
+		Else
+			Li := Li+1	
+		Endif
+		
+		@ Li,001 PSAY STR0021 //"Obs:"
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Imprime o campo memo Observacao.                             ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If ! Empty(SUA->UA_CODOBS)
+			cObs := MSMM(SUA->UA_CODOBS,43)
+			nInd := 1
+			While .T.
+				cLinha := Substr(cObs,nInd,43)
+				If ! Empty(cLinha)
+					@ li,006 PSAY cLinha
+					Li := Li+1
+				Else
+					Exit
+				Endif	
+				nInd := nInd + 43
+			End
+		Endif
+		Li := Li+1
+		@ Li,000 PSAY Repl("-",80)		
+		Li := Li+1
+		
+   	@ Li,001 PSAY OemtoAnsi(STR0022) //"Codigo          Descri‡„o              Un     Qtde.     Vlr. Unit.        Total" 
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+
+	   DbSelectArea("SUB")
+		DbSetOrder(1)
+		DbSeek(xFilial("SUB")+SUA->UA_Num)
+		While (.not. Eof()) .and. (xFilial("SUB")+SUA->UA_Num == SUB->UB_FILIAL+SUB->UB_NUM)
+
+         DbSelectArea("SB1")
+         DbSetOrder(1)
+         If DbSeek(xFilial("SB1")+SUB->UB_PRODUTO) 
+         	@ Li,001 PSAY B1_COD
+			   @ Li,017 PSAY Left(B1_DESC,20)
+			   @ Li,040 PSAY B1_UM
+			Endif
+				
+         @ Li,043 PSAY SUB->UB_Quant   Picture "@Z 999999,99"
+         @ Li,053 PSAY SUB->UB_VrUnit  Picture "@Z 99,999,999.99"
+         @ Li,067 PSAY SUB->UB_VlrItem Picture "@Z 99,999,999.99"			
+
+         Li := Li+1
+         If Li > 55
+            cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+         EndIf
+
+         DbSelectArea("SUB")
+         DbSkip()
+		End
+
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+		@ Li,000 PSAY Padc(STR0023,80) //"Forma de Pagamento"
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+		Li := Li+1	
+		@ Li,001 PSAY STR0024 //"Data"
+		@ Li,022 PSAY STR0025 //"Valor"
+		@ Li,038 PSAY STR0026 //"Forma" 
+		Li := Li+1
+	   @ Li,000 PSAY Repl("-",80)
+
+      DbSelectArea("SL4")
+      DbSetOrder(1)
+      DbSeek(xFilial("SL4")+SUA->UA_NUM)
+      While (.not. Eof()) .and. (xFilial("SL4")+L4_Num == SUA->UA_FILIAL+SUA->UA_NUM)
+         Li := Li+1
+         If Li > 55
+            cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+         EndIf
+			
+         @ Li,001 PSAY L4_DATA
+         @ Li,014 PSAY L4_VALOR Picture "@Z 99,999,999.99"
+         @ Li,040 PSAY L4_FORMA Picture "@!"
+
+         DbSelectarea("SL4")
+         DbSkip()
+      End			
+
+		Li := Li+1
+
+     	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     	//³ Procuro a validade de acordo com o posto de venda   ³
+     	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		DbSelectArea("SU7")
+		DbSetOrder(1)
+		If DbSeek(xFilial("SU7")+SUA->UA_OPERADO)
+      	If ! Empty(SU7->U7_POSTO)
+		 		cU0_POSTO := SU7->U7_POSTO
+			Endif	
+		Endif
+
+		DbSelectArea("SU0")
+		DbSetorder(1)
+		If Dbseek(xFilial("SU0")+cU0_POSTO)
+			nDias := U0_VALIDAD
+		Endif		
+					
+		Li := Li+1
+		If nDias > 1	
+	  	   @ Li,001 PSAY OemtoAnsi(STR0027+StrZero(nDias,3)+STR0028) //"Este or‡amento ‚ valido por "," dias."
+		Else
+	  	   @ Li,001 PSAY OemtoAnsi(STR0027+StrZero(nDias,3)+STR0029) //"Este or‡amento ‚ valido por "," dia."
+		Endif				
+		Li := Li+1
+	Endif	
+Endif	
+
+If !lfirst
+  cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+  @ Li+1,001 PSAY OemToAnsi(STR0030) //"Nao ha informacoes para imprimir este relatorio"  
+Endif
+
+roda(cbcont,cbtxt,tamanho)
+
+DbSelectArea("SUA")
+RetIndex("SUA")
+Set Filter To
+DbSetorder(1)
+
+If TYPE("uPorPrograma") == "U"
+   fErase(cArqTrab+OrdBagExt())   
+   fErase(cArqTrab)
+Endif	
+Set Device To Screen
+
+If aReturn[5] == 1
+	Set Printer TO 
+	dbcommitAll()
+	ourspool(wnrel)
+EndIf
+
+MS_FLUSH()
+
+Return(.T.)

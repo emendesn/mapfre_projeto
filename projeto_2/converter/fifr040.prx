@@ -1,0 +1,209 @@
+#IFNDEF WINDOWS
+	#DEFINE PSAY SAY
+#ENDIF	
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡…o    ³ FIFR040  ³ Autor ³ Marcos Stiefano       ³ Data ³ 02/11/97 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³Relacao de produtos com problema na baixa FIFO              ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ SIGAEST                                                    ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ ATUALIZACOES SOFRIDAS DESDE A CONSTRUCAO INICIAL.                     ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ PROGRAMADOR  ³ DATA   ³ BOPS ³  MOTIVO DA ALTERACAO                   ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Rodrigo Sart.³22/04/98³XXXXXX³Atualizacao para versao 2.06/4.06       ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+*/
+Titulo     := "RELACAO DE PRODUTOS COM PROBLEMAS NA BAIXA"
+cString    := "SD8"
+wnrel      := "FIFR040"
+CbTxt      := ""
+cDesc1     := "O objetivo deste relat¢rio ‚ exibir detalhadamente todos os produtos com"
+cDesc2     := "problemas na baixa quando do processamento do custo FIFO.                    "
+Tamanho    := "M"
+aReturn    := { "Zebrado", 1,"Administra‡„o", 2, 2, 1, "",1 }
+nLastKey   := 0
+cPerg      := "  "
+cabec1     := ""
+cabec2     := ""
+cRodaTxt   := ""
+nCntImpr   := 0
+nTipo      := 0
+nomeprog   := "FIFR040"
+cCondicao  := ""
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Envia controle para a funcao SETPRINT                        ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+wnrel:="FIFR040"
+SetPrint(cString,wnrel,cPerg,titulo,cDesc1,cDesc2,"",.F.,"")
+
+If nLastKey == 27
+   Return .T.
+Endif
+
+SetDefault(aReturn,cString)
+
+If nLastKey == 27
+   Return .T.
+Endif
+
+#IFDEF WINDOWS
+	RptStatus({|| Execute(R040Imp)},Titulo)
+	Return
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Fun‡…o    ³ R040IMP  ³ Autor ³                       ³ Data ³ 27.11.96 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³ Chamada do Relatorio                                       ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ FIFR040                                                    ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß*/
+Function R040Imp
+#ENDIF
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis para controle do cursor de progressao do relatorio ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+nTotRegs := 0 
+nMult    := 1
+nPosAnt  := 4
+nPosAtu  := 4
+nPosCnt  := 0
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis locais exclusivas deste programa                   ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+aCampos  := {}
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Contadores de linha e pagina                                 ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Li    := 80
+m_pag := 1
+lMovimento:=.F.
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Verifica se deve comprimir ou nao                            ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+nTipo   := IIF(aReturn[4]==1,15,18)
+cArqDif := "LOGDIF.TXT"
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Monta os Cabecalhos                                          ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cabec1 := " PRODUTO          LOCAL  DESCRICAO                    QUANTIDADE  COD. FISCAL  TPO MOVTO.    DOC.   SER  ORDEM PRODUCAO  DT EMISSAO"
+cabec2 := ""
+// PRODUTO          LOCAL  DESCRICAO                    QUANTIDADE  COD. FISCAL  TPO MOVTO.    DOC.   SER  ORDEM PRODUCAO  DT EMISSAO
+// 123456789012345   99    1234567890123456789012345  9.999.999,99      999         999       999999  999     99999999999   99/99/99
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Cria arquivo de trabalho para processar pela sequencia.      ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+AADD(aCampos,{ "TRB_FILIAL"	,"C",02,0 } )
+AADD(aCampos,{ "TRB_COD"		,"C",15,0 } )
+AADD(aCampos,{ "TRB_LOCAL"		,"C",02,0 } )
+AADD(aCampos,{ "TRB_DESC"	   ,"C",25,0 } )
+AADD(aCampos,{ "TRB_QUANT"		,"C",16,0 } )
+AADD(aCampos,{ "TRB_CF"			,"C",03,0 } )
+AADD(aCampos,{ "TRB_TM"			,"C",03,0 } )
+AADD(aCampos,{ "TRB_DOC"		,"C",06,0 } )
+AADD(aCampos,{ "TRB_SERIE"		,"C",03,0 } )
+AADD(aCampos,{ "TRB_OP"			,"C",11,0 } )
+AADD(aCampos,{ "TRB_DTBASE"	,"C",08,0 } )
+
+cNomTrb  := CriaTrab(aCampos)
+cNomTrb1 := Subs(cNomTrb,1,7)+"A"
+
+dbSelectArea(0)
+dbUseArea( .T.,,cNomTrb,"TRB",.F. )
+dbSelectArea("TRB")
+Zap
+
+If File(cArqDif)
+	Append From (cArqDif) SDF
+Endif
+dbGoTop()
+
+IndRegua("TRB",cNomTrb1,"TRB->TRB_FILIAL+TRB->TRB_COD+TRB->TRB_LOCAL+TRB->TRB_OP+TRB->TRB_DTBASE",,,"Criando Arquivo Trabalho 1...")
+dbClearIndex()
+dbSetIndex(cNomTrb1+OrdBagExt())
+dbSetOrder(1)
+
+SetRegua(LastRec())
+
+While !Eof()
+	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	//³ Verifica se houve interrup‡„o pelo operador      ³
+	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+	#IFDEF WINDOWS
+		If lAbortPrint
+	#ELSE
+		Inkey()
+		If LastKey() == 286
+	#ENDIF
+			@Prow()+1,001 PSAY "CANCELADO PELO OPERADOR"
+			Exit  
+		Endif
+
+	lMovimento:=.T.
+	IncRegua()
+
+	If li > 58
+		Cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+	EndIf
+
+	@ Li,002 PSAY TRB->TRB_COD
+	@ Li,019 PSAY TRB->TRB_LOCAL
+	@ Li,025 PSAY TRB->TRB_DESC
+	@ Li,052 PSAY Transform(Val(TRB->TRB_QUANT),"@E 9,999,999.99")
+	@ Li,070 PSAY TRB->TRB_CF
+	@ Li,082 PSAY TRB->TRB_TM
+	@ Li,092 PSAY TRB->TRB_DOC
+	@ Li,100 PSAY TRB->TRB_SERIE
+	@ Li,108 PSAY TRB->TRB_OP
+	@ Li,122 PSAY TRB->TRB_DTBASE
+	Li:= Li+1
+	dbSkip()
+	If li > 58
+		Cabec(titulo,cabec1,cabec2,nomeprog,tamanho,nTipo)
+	EndIf
+End
+
+If lMovimento
+	Roda(0,Space(10),"M")
+EndIf
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Deleta Arquivo de Trabalho (TRB)                             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+dbSelectarea("TRB")
+dbCloseArea()
+Ferase(cNomTrb  + ".DBF")       // Arquivo de trabalho
+Ferase(cNomTrb1 + OrdBagExt())  // Indice gerado 1
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Devolve a condicao original do arquivo principal             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+dbSelectArea("SB1")
+dbSetOrder(1)
+
+Set device to Screen
+
+If aReturn[5] == 1
+	Set Printer To 
+	dbCommitAll()
+	OurSpool(wnrel)
+Endif
+
+MS_FLUSH()

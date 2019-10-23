@@ -1,0 +1,365 @@
+#include "rwmake.ch"    
+
+User Function CARTA()   
+ 
+SetPrvt("TAMANHO,LIMITE,CDESC1,CDESC2,CDESC3,CSTRING")
+SetPrvt("NOMEPROG,NTIPO,ARETURN,AORD,CPERG,NLASTKEY")
+SetPrvt("LI,CSAVSCR1,CSAVCUR1,CSAVROW1,CSAVCOL1,CSAVCOR1")
+SetPrvt("CFILIAL,NJUR,NMULTA,NVLRCORRIG,ASTRU,AMES")
+SetPrvt("CBTXT,CBCONT,M_PAG,TITULO,CABEC1,CABEC2")
+SetPrvt("WNREL,CARQTRAB,CARQX,CKEY,CFILTRO,NHORA")
+SetPrvt("NMIN,DDATA,CFAXD,CFAXC,CFAXT,AFILES")
+SetPrvt("NI,P_CNT,P_ATU,P_ANT,MV_PAR05,AARQFAX")
+SetPrvt("CCLIENTE,CLOJA,CAGENTE,CARQFAX,CFAXF,_CRLF")
+SetPrvt("NHANDLE,I,CTEL,CSTR,NAREASALVA,X")
+SetPrvt("_CMODELO,_CCOB,")
+
+
+
+/*/
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Programa  ³ EMICARTA ³ Autor ³ Alexandre N. Gomes    ³ Data ³ 27/07/95 ³±±
+±±³          ³          ³       ³ Alberto S Garcia      ³      ³ 01/09/95 ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³ Emissao de Carta para Cobranca                             ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Uso       ³ Microsiga                                                  ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+/*/
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Define Variaveis                                             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+Private LI  := 80
+Private limite           := 80
+Private tamanho          := "P"
+Private cDesc1 := "Este programa ira emitir uma Carta de Cobranca para o Cliente,"
+Private cDesc2 := "relacionando os Titulos em Atraso"
+Private cDesc3 := ""
+Private cString:= "SE1"
+Private nomeprog := "EMICARTA"
+Private nTipo    := 18
+Private aReturn          := { "Zebrado", 1, "Administracao", 2, 2, 1, "", 1}
+Private aOrd     := {}
+Private cPerg    :="RFIN01" 
+Private nomeprog         := "CARTAC"
+nLastKey := 0
+li := 0
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis Utilizadas por Este Programa                       ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cFilial  := xFilial("SE1")
+nJur := 0
+nMulta := 0
+nVlrCorrig := 0
+aStru := { { "CLIENTE"  , "C",  6, 0 } ,;
+	   { "LOJA"     , "C",  2, 0 } ,;
+	   { "AGENTE"   , "C",  3, 0 } ,;
+	   { "PREFIXO"  , "C",  3, 0 } ,;
+	   { "NUM"      , "C",  6, 0 } ,;
+	   { "PORTADO"  , "C",  3, 0 } ,;
+	   { "PARCELA"  , "C",  1, 0 } ,;
+	   { "VENCREA"  , "D",  8, 0 } ,;
+	   { "VLRORI"   , "N",  9, 2 } ,;
+	   { "VLRCORRIG", "N",  9, 2 } ,;
+	   { "NAVISOS"  , "N",  2, 0 } ,;
+	   { "DTPROTES" , "D",  8, 0 } ,;
+    	{ "SITUACAO" , "C",  1, 0 }  }
+
+aMes := { "Janeiro"   , "Fevereiro" , "Marco", "Abril", "Maio" ,;
+	  "Junho", "Julho", "Agosto", "Setembro", "Outubro"    ,;
+	  "Novembro", "Dezembro" }
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Variaveis utilizadas para Impressao do Cabecalho e Rodape    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+cbtxt    := SPACE(10)
+cbcont   := 0
+m_pag    := 1
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Monta os Cabecalhos                                          ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+titulo := ""
+cabec1 := ""
+cabec2 := ""
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Verifica as perguntas selecionadas                           ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+Pergunte( "RFIN01", .F. )
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Envia controle para a funcao SETPRINT                        ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+wnrel:=SetPrint(cString,nomeprog,cPerg,@titulo,cDesc1,cDesc2,cDesc3,.T.,aOrd,.T.,Tamanho,,.T.)
+
+If LastKey() == 27 .or. nLastKey == 27
+   Return
+Endif
+
+SetDefault(aReturn,cString)   
+
+ 
+
+If LastKey() == 27 .or. nLastKey == 27
+   Return
+Endif
+
+///  Cria Arquivo de Trabalho
+
+cArqTrab := CriaTrab(aStru,.T.)
+Use &cArqTrab ALIAS TRB New
+dbSelectArea("TRB")
+Index On CLIENTE+PREFIXO+NUM To &cArqTrab
+
+cArqx := Subs(cArqTrab,1,7)+"A"
+dbSelectArea("SE1")
+dbSetOrder(7)
+cKey := "E1_FILIAL+dtos(E1_VENCREA)+E1_PREFIXO+E1_NUM+E1_PARCELA"
+cFiltro := 'E1_FILIAL == "'+xFilial("SE1")+'" .and. E1_SALDO > 0.01 .and. DTOS(E1_VENCREA) >= "'+dtos(mv_par01)+'"'
+cFiltro := cFiltro + ".and. E1_CLIENTE >= '"+mv_par06+"' .and. E1_CLIENTE <= '"+mv_par07+"'"
+
+IndRegua("SE1",cArqx,cKey,,cFIltro,"Filtrando SE1...")
+
+
+cFaxC := ""                 //Contato p/ Envio do Fax
+cFaxT := ""                 //Data e Hora de Expedicao do FAX
+
+dbSelectArea("SE1")
+dbGoTop()
+While ! Eof() .and. SE1->E1_VENCREA <= MV_PAR02
+   Inkey()
+   IF LastKey() == 286        // Alt-A
+      @ Prow()+1,001 Say "CANCELADO PELO OPERADOR"
+      Exit
+   EndIF
+
+   If Empty(SE1->E1_SALDO) .or. SE1->E1_SITUACA $ "0/2/3/4/5"
+      dbSelectArea("SE1")
+      dbSkip()
+      Loop
+   Endif
+
+   If ((SE1->E1_PORTADO < mv_par03) .or. ;
+       (SE1->E1_PORTADO > mv_par04) .or. ;
+       (SE1->E1_CLIENTE < mv_par06) .or. ;
+       (SE1->E1_CLIENTE > mv_par07))
+      dbSelectArea("SE1")
+      dbSkip()
+      Loop
+   Endif
+
+   CriaReg()
+
+   dbSelectArea("SE1")
+   dbSkip()
+EndDo
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Imprime o conteudo do arquivo de trabalho                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+dbSelectArea("TRB")
+dbGoTop()
+aArqFax:={}
+Do While ! Eof()
+   cCliente := TRB->CLIENTE
+   cLoja    := TRB->LOJA
+   cAgente  := TRB->AGENTE 
+   dbSelectArea("SA1")
+   dbSetOrder(1)
+   dbSeek(xFilial("SA1")+TRB->CLIENTE+TRB->LOJA)
+   dbSelectArea("TRB")
+ 
+   If Empty(SA1->A1_FAX) .OR. SA1->A1_PRIOR == "A" 
+		dbSkip()
+		Loop
+	Endif
+  
+    ImpCarta()
+Enddo
+
+_CRLF := Chr(13)+Chr(10)
+
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Deleta Arquivo Temporario e Restaura os Indices Nativos.     ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+If Select("TRB") > 0
+	dbCloseArea()
+    If File(cArqTrab+".DBF")
+	Ferase(cArqTrab+".DBF")    //arquivo de trabalho
+	EndIf
+    If File(cArqTrab+OrdBagExt())
+	Ferase(cArqTrab+OrdBagExt())    //indice gerado
+	EndIf
+Endif
+RETINDEX("SE1")
+Set FIlter to 
+Ferase(cArqx+OrdBagExt())
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Devolve a condicao original do arquivo principal             ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+dbSelectArea(cString)
+RetIndex("SE1")
+Set Device To Screen
+
+If aReturn[5] == 1
+   Set Printer To
+   dbCommitAll()
+   OurSpool(wnrel)
+Endif
+
+MS_FLUSH()
+Return      
+
+
+Static Function CriaReg()
+
+   nAreaSalva := Select()
+   dbSelectArea("TRB")
+   RecLock("TRB",.T.)
+   TRB->CLIENTE  := SE1->E1_CLIENTE
+   TRB->LOJA     := SE1->E1_LOJA
+   TRB->AGENTE   := " " // SE1->E1_PORTADO
+   TRB->PREFIXO  := SE1->E1_PREFIXO
+   TRB->NUM      := SE1->E1_NUM
+   TRB->PORTADO  := SE1->E1_PORTADO
+   TRB->PARCELA  := SE1->E1_PARCELA
+   TRB->VENCREA  := SE1->E1_VENCTO // ERA E1_VENCREA
+   TRB->VLRORI   := SE1->E1_SALDO
+   TRB->VLRCORRIG:= nVlrCorrig
+   TRB->SITUACAO := SE1->E1_SITUACA
+   TRB->DTPROTES := SE1->E1_VENCREA  //+ GetMV("MV_DTAPROT")
+  
+   dbSelectArea(nAreaSalva)
+Return(.T.)
+
+
+Static Function ImpCarta(lEnd,wnrel,cString)   
+
+If  Li > 80 
+      Cabec(Titulo,Cabec1,Cabec2,NomeProg,Tamanho,nTipo)
+      nLin := 5
+   Endif
+
+
+   Li := 5
+   @ Li, 01 PSAY RTrim(SM0->M0_CIDCOB)+", "+StrZero(Day(mv_par08),2,0)+" de "+aMes[Month(mv_par08)]+" de "+Str(Year(mv_par08),4,0)
+   Li:=Li+2
+   @ Li,01 PSAY "A"
+   Li:=Li+1
+   @ Li,01 PSAY SA1->A1_NOME
+   Li:=Li+1
+   @ Li,01 PSAY IIf(Empty(SA1->A1_ENDCOB),SA1->A1_END,SA1->A1_ENDCOB)
+   Li:=Li+1
+   @ Li,01 PSAY Alltrim(SA1->A1_MUN) + " - " + SA1->A1_EST + " - CEP.: " + Subs(SA1->A1_CEP,1,5)+"-"+Subs(SA1->A1_CEP,6,6) + " - FAX: " + SA1->A1_FAX
+   for x:= 1 to 2
+     	Li:=Li+1
+     	@ LI,01 PSAY "  "	
+   next
+   Li:=Li+1
+
+	@ Li,01 PSAY "A/C : Sr(a) " + ALLTRIM(SA1->A1_CONTATO) + " e/ou Contas a Pagar "
+   for x:= 1 to 3
+     	Li:=Li+1
+     	@ LI,01 PSAY "  "	
+   next
+   Li:=Li+1
+
+   @ Li,01 PSAY "Ref.: DEBITOS EM ATRASO"
+   for x:= 1 to 3
+     	Li:=Li+1
+     	@ LI,01 PSAY "  "	
+   next
+   Li:=Li+1
+
+   @ Li, 01 PSAY "Prezado Cliente, "
+   for x:= 1 to 3
+     	Li:=Li+1
+     	@ LI,01 PSAY "  "	
+   next
+   Li:=Li+1
+
+   @ Li, 01 PSAY "Atraves de nosso sistema de cobrança, verificamos que  encontra-se pendente de"
+   Li:=Li+1   
+   @ Li, 01 PSAY "de regularizacao, o(s) titulo(s) abaixo relacionado(s) referente(s) a utiliza-"
+   Li:=Li+1   
+   @ Li, 01 PSAY "cao de nossos servicos."  
+   Li:=Li+1   
+   @ Li, 01 PSAY "Caso o  pagamento tenha  sido efetuado, favor  enviar fax  para (11) 3942-1584"     
+   Li:=Li+1   
+   @ Li, 01 PSAY "o comprovante  do mesmo, p/ que  possamos efetuar liquidacao  do(s) titulo(s)."
+   Li:=Li+1   
+   @ Li, 01 PSAY "Caso o pagamento  nao tenha  sido efetuado, favor  proceder o mesmo atraves do" 
+   Li:=Li+1   
+   @ Li, 01 PSAY "boleto anexo.  "    
+   Li:=Li+1   
+   @ Li, 01 PSAY "Ressaltamos que ate a data de vencimento do boleto nao estamos cobrando multa/"
+   Li:=Li+1
+   @ Li, 01 PSAY "juros do(s) debito(s) apresentado(s)."    
+   Li:=Li+1   
+   @ Li, 01 PSAY "Apos o vencimento, o(s) titulo(s) estarao sujeito(s) a protesto. " 
+         
+   
+   
+   for x:= 1 to 2
+     	Li:=Li+1
+     	@ LI,01 PSAY "  "	
+   next
+   Li:=Li+1
+
+   cabec1 := "Duplicata  Parcela  Vencimento     Valor   " //Vlr.Corrigido  No.Avisos  Dt. Protesto"    
+   //      xxxxxxxxxx  xxx    xxxxxxxx  xxxxxxxxxx   xxxxxxxxxx        x        xxxxxxxx      
+   //      12345678901234567890123456789012345678901234567890123456789012345678901234567890
+      
+   @ Li,01 PSAY cabec1
+   Li:=Li+1
+
+   While TRB->CLIENTE+TRB->LOJA+TRB->AGENTE == cCliente+cLoja+cAgente .and. !Eof()
+      Li:=Li+1
+      @ Li,03 PSAY TRB->NUM  
+      @ Li,15 PSAY TRB->PARCELA   
+      @ Li,22 PSAY TRB->VENCREA
+      @ Li,33 PSAY TRB->VLRORI    Picture "@E@Z 999,999.99"
+    
+      dbSelectArea("TRB")
+      dbSkip()
+   Enddo
+   for x:= 1 to 3
+   	Li:=Li+1
+   	@ LI,01 PSAY "  "	
+   next
+   Li:=Li+1
+        _cModelo := AllTrim(GetMV("MV_CAR0"+Str(MV_PAR09,1,0)))
+
+     
+	@ Li,01 PSAY " "
+	Li:=Li+1
+	@ Li,01 PSAY " "
+   Li:=Li+1
+   @ Li, 01 PSAY "Atenciosamente," 
+   Li:=Li+1
+	@ Li,01 PSAY " "
+	Li:=Li+1
+	@ Li,01 PSAY " "
+   Li:=Li+1	
+	@ Li,01 PSAY " "
+   Li:=Li+1	
+   @ Li,01 PSAY  SUBSTR(SM0->M0_NOMECOM,1,16) //"Microsiga Ass. Software e Com. de Comp. Ltda"
+   Li:=Li+1
+   _cCob  := GetMv("MV_RESPCOB")
+
+     
+        @ Li,01 PSAY  "Cleber Moraes - (11) 3948-4825 - cmoraes@cesvibrasil.com.br "
+    	Li:=Li+1
+        @ Li,01 PSAY  "Fabio Rosa    - (11) 3948-4815 - frosa@cesvibrasil.com.br "
+    	Li:=Li+1   
+    	 @ Li,01 PSAY  "Depto. Contas a Receber "
+    	Li:=Li+1                                       
+    	
+
+Return(.T.)
+   

@@ -1,0 +1,87 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+
+User Function Ms520vld()        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("LRET,CNUMPDV,CNUMPDVATU,CNUMANT,NERROR,")
+
+/*
+ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
+±±³Programa  ³ MS520VLD ³ Autor ³ Rodrigo de A. Sartorio³ Data ³ Out/98   ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ´±±
+±±³Descri‡…o ³ Exclui cupom fiscal para BEMATECH (DOS/WINDOWS)            ³±±
+±±ÃÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´±±
+±±³ Uso      ³ Verifica se ‚ possivel excluir cupom e NF atraves do       ³±±
+±±³          ³ programa MATA520 (SIGAFAT PADRAO)                          ³±±
+±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+*/
+lRet:=.T.
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Caso a serie NAO SEJA DO CUPOM FISCAL, processa nota normalmente³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+If Alltrim(SF2->F2_SERIE) != Alltrim(GETMV("MV_SERCUP"))
+// Substituido pelo assistente de conversao do AP5 IDE em 21/06/01 ==> 	__Return(lRet)
+Return(lRet)        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+Else
+	// Numero do PDV que efetuou a venda
+	If SF2->(FieldPos(F2_PDV)) > 0
+		cNumPdv:=SF2->F2_PDV
+		#IFNDEF WINDOWS
+			cNumPdvAtu:= Substr(LjEnviaBm("35|14"),4,4)
+		#ELSE
+			cNumPdvAtu := CallMp20Fi("|35|14|")
+		#ENDIF	
+
+		If AllTrim(cNumPdv) != AllTrim(cNumPdvAtu)
+			Tone(3000,1)
+			Aviso("Aten‡„o","Esta venda foi efetuada por outro caixa .O Pdv que efetuou a venda foi: "+cNumPdv,{"Ok"})
+			lRet:=.F.
+		EndIf
+	EndIf
+
+	If lRet
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³ Obtem o numero do cupom para gravar no SF2 para identificar ³
+		//³ o numero da venda na impressora 									 ³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		#IFNDEF WINDOWS
+			cNumAnt := SubStr(ljEnviaBm("30|"),4,6)
+		#ELSE
+			cNumAnt := CallMp20Fi("|30|")
+		#ENDIF
+		If !(SF2->F2_DOC == cNumAnt)
+			Help(" ",1,"ULTCUP")
+			lRet:=.F.
+		EndIF
+	
+		#IFNDEF WINDOWS
+			nError := 1
+			While lRet
+				If ljEnviaBm("19|")
+					ljEnviaBm("14|")
+					Exit
+				EndIf
+				nError:=nError+1
+				If nError > 2
+					lRet:=.F.
+				EndIf
+			EndDo
+		#ELSE
+			If lRet
+				CallMp20Fi( "|14|" )
+			EndIf
+		#ENDIF
+	EndIf
+// Substituido pelo assistente de conversao do AP5 IDE em 21/06/01 ==> 	__Return(lRet)	
+Return(lRet)	        // incluido pelo assistente de conversao do AP5 IDE em 21/06/01
+EndIf	
